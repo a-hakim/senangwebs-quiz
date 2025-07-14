@@ -163,8 +163,14 @@
             this.state.isFinished = true;
             clearInterval(this.state.timerId);
 
-            // Hide all quiz elements
-            this.ui.questionsContainer.style.display = 'none';
+            // Hide quiz questions but not the entire container
+            Array.from(this.ui.questionsContainer.children).forEach(child => {
+                if (child.dataset.swqQuestionId) {
+                    child.style.display = 'none';
+                }
+            });
+            
+            // Hide controls and timer, but keep the container visible
             if (this.ui.nextBtn) this.ui.nextBtn.style.display = 'none';
             if (this.ui.prevBtn) this.ui.prevBtn.style.display = 'none';
             if (this.ui.timerDisplay) this.ui.timerDisplay.style.display = 'none';
