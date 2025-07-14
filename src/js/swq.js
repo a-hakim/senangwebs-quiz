@@ -47,10 +47,7 @@
                 feedbackMode: 'standard', // standard, immediate, retry
                 allowSkip: false,
                 allowBack: false,
-                timer: 0, // in seconds
-                onStart: () => {},
-                onComplete: () => {},
-                onQuestionChange: () => {}
+                timer: 0 // in seconds
             };
 
             const dataAttrs = {};
@@ -77,15 +74,31 @@
                 const questionElements = this.element.querySelectorAll('[data-swq-question-id]');
                 questionElements.forEach(qEl => {
                     const typeEl = qEl.querySelector('[data-swq-type]');
-                    if (!typeEl) return;
+                    if (!typeEl) {
+                        console.warn(`Question ${qEl.dataset.swqQuestionId} is missing data-swq-type attribute`);
+                        return;
+                    }
+
+                    const questionTextEl = qEl.querySelector('p');
+                    if (!questionTextEl) {
+                        console.warn(`Question ${qEl.dataset.swqQuestionId} is missing question text`);
+                        return;
+                    }
 
                     const question = {
                         id: qEl.dataset.swqQuestionId,
-                        text: qEl.querySelector('p').innerHTML,
+                        text: questionTextEl.innerHTML,
                         type: typeEl.dataset.swqType,
                         answer: typeEl.dataset.swqAnswer,
                         options: typeEl.dataset.swqOptions ? JSON.parse(typeEl.dataset.swqOptions) : []
                     };
+
+                    // Validate required fields
+                    if (!question.answer && question.type !== 'text') {
+                        console.warn(`Question ${question.id} is missing answer attribute`);
+                        return;
+                    }
+
                     this.questions.push(question);
                 });
             }
@@ -517,7 +530,8 @@
         }
 
         _isAnswerCorrect(question, userAnswer) {
-            if (userAnswer === null || userAnswer === '') return false;
+            if (userAnswer === null || userAnswer === '' || userAnswer === undefined) return false;
+            if (!question.answer) return false; // Add this check
 
             const correctAnswer = question.answer.toString();
             switch (question.type) {
