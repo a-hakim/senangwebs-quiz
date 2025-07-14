@@ -1,32 +1,37 @@
-# SenangWebs Jot (SWJ)
+# SenangWebs Quiz (SWQ)
 
-Lightweight JavaScript tool that lets you copy text from HTML elements with a single click.
+Lightweight JavaScript library that lets you create interactive quizzes with various question types and feedback modes.
 
 ## Features
 
-- **Simple Integration:** Add a few data attributes to your HTML, and SWJ handles the rest.
-- **Flexible Source Elements:** Copy text from `<textarea>`, `<input>`, `<div>`, `<span>`, `<p>`, `<code>`, and more.
-- **User Feedback:** Buttons provide clear visual feedback for "Copy", "Copied!", and "Failed!" states using Tailwind CSS.
-- **Modern & Fallback Copy:** Uses `navigator.clipboard.writeText()` with a fallback to `document.execCommand('copy')`.
-- **Error Handling:** Gracefully handles missing targets or unsupported browser features, logging warnings to the console.
+- **Simple Integration:** Add a few data attributes to your HTML, and SWQ handles the rest.
+- **Multiple Question Types:** Support for multiple choice, multiple select, true/false, text input, and number input questions.
+- **Flexible Feedback Modes:** Choose from standard (feedback at end), immediate (feedback after each question), or retry (allow corrections) modes.
+- **Built-in Timer:** Optional countdown timer with automatic quiz completion when time expires.
+- **Navigation Controls:** Allow users to go back to previous questions and skip questions (configurable).
+- **Automatic UI Generation:** Generates question interfaces automatically or works with custom HTML structures.
+- **Modern Styling:** Clean, responsive design with Tailwind CSS-compatible classes.
 - Efficient performance and automatic initialization on `DOMContentLoaded`.
-- Global configuration options for button text and styling.
-- Responsive and works on all modern browsers.
+- Comprehensive scoring and results display.
+- Works on all modern browsers.
 
 ## Examples / Demo
 
-After running `npm run build` or `npm run dev`, an `index.html` file will be generated in the `dist/` directory. Open this `dist/index.html` in your browser to see SenangWebs Jot in action. This demo is based on the `examples/index.html` source file and showcases various use cases.
+After running `npm run build` or `npm run dev`, you can open the example files in the `examples/` directory to see SenangWebs Quiz in action:
+
+- [`examples/custom-ui.html`](examples/custom-ui.html) - Complete demo showcasing all question types and features
+- [`examples/minimal.html`](examples/minimal.html) - Basic implementation with automatic UI generation
 
 ## Installation
 
-SenangWebs Jot is built using Webpack. The library's core files are located in the `src/` directory, and the distributable, production-ready files are generated in the `dist/` directory.
+SenangWebs Quiz is built using Webpack. The library's core files are located in the `src/` directory, and the distributable, production-ready files are generated in the `dist/` directory.
 
 ### Using npm (Recommended for Development)
 
 1.  **Clone the Repository** (if you haven't already):
     ```bash
     git clone <repository-url> # Replace <repository-url> with the actual URL
-    cd senangwebs-jot
+    cd senangwebs-quiz
     ```
 
 2.  **Install Dependencies**:
@@ -44,83 +49,246 @@ SenangWebs Jot is built using Webpack. The library's core files are located in t
         ```bash
         npm run dev
         ```
-    This will generate `swj.js`, `swj.css` (for production) or `swj.js`, `swj.css` (for development) in the `dist/` folder.
+    This will generate `swq.js` and `swq.css` in the `dist/` folder.
 
 ### Using Pre-built Distributable Files (CDN-like or Direct Include)
 
 1.  **Include the CSS**:
-    Link the `swj.css` (or `swj.css` for development) file in the `<head>` of your HTML:
+    Link the `swq.css` file in the `<head>` of your HTML:
     ```html
     <!-- If using local dist files -->
-    <link rel="stylesheet" href="path/to/dist/swj.css">
+    <link rel="stylesheet" href="path/to/dist/swq.css">
 
     <!-- Or if using a CDN (replace with actual CDN link if available) -->
-    <link rel="stylesheet" href="https://unpkg.com/senangwebs-jot@latest/dist/swj.css">
+    <link rel="stylesheet" href="https://unpkg.com/senangwebs-quiz@latest/dist/swq.css">
     ```
 
 2.  **Include the JavaScript**:
-    Add the `swj.js` (or `swj.js` for development) script to your HTML file, preferably at the end of the `<body>` tag:
+    Add the `swq.js` script to your HTML file, preferably at the end of the `<body>` tag:
     ```html
     <!-- If using local dist files -->
-    <script src="path/to/dist/swj.js"></script>
+    <script src="path/to/dist/swq.js"></script>
 
     <!-- Or if using a CDN (replace with actual CDN link if available) -->
-    <script src="https://unpkg.com/senangwebs-jot@latest/dist/swj.js"></script>
+    <script src="https://unpkg.com/senangwebs-quiz@latest/dist/swq.js"></script>
     ```
     The library initializes itself automatically on `DOMContentLoaded`.
 
 ## Usage
 
-1.  Ensure the SWJ CSS and JavaScript files are included in your HTML as described in the Installation section.
+### Basic Setup
 
-2.  The library initializes automatically. No manual initialization call is needed for basic functionality.
+1.  Ensure the SWQ CSS and JavaScript files are included in your HTML as described in the Installation section.
 
-3.  Add data attributes to the HTML elements:
-    *   `data-swj-id="your-unique-id"`: Add this to the HTML element whose content you want to copy (e.g., a `<div>`, `<p>`, `<textarea>`, `<code>`).
-    *   `data-swj-value`: This attribute **must** be present on the source element. For `<input>` and `<textarea>` elements, their `.value` will be copied. For other elements, their `.textContent` will be copied.
-    *   `data-swj-copy="your-unique-id"`: Add this to the button element that will trigger the copy action. The value of this attribute must match the `data-swj-id` of the source element.
+2.  Create a quiz container with the `data-swq-quiz` attribute and configure it with optional settings:
 
-4.  Example:
-    ```html
-    <!-- Source Element: A textarea -->
-    <textarea data-swj-id="mySecretCode" data-swj-value>console.log('Hello from SWJ!');</textarea>
+```html
+<div 
+    data-swq-quiz
+    data-swq-feedback-mode="immediate"
+    data-swq-allow-back="true"
+    data-swq-allow-skip="true"
+    data-swq-timer="300">
+    
+    <!-- Questions go here -->
+    
+</div>
+```
 
-    <!-- Copy Button: Linked to the textarea above -->
-    <button type="button" data-swj-copy="mySecretCode">Copy Code Snippet</button>
+### Quiz Configuration Options
 
+Configure your quiz behavior using data attributes on the quiz container:
 
-    <!-- Source Element: A div -->
-    <div data-swj-id="shareableLink" data-swj-value>https://mysite.com/awesome-page</div>
+- `data-swq-feedback-mode`: 
+  - `"standard"` - Show feedback only at the end (default)
+  - `"immediate"` - Show feedback after each question
+  - `"retry"` - Allow users to retry incorrect answers
+- `data-swq-allow-back="true"` - Enable previous question navigation
+- `data-swq-allow-skip="true"` - Allow users to skip questions
+- `data-swq-timer="300"` - Set timer in seconds (0 = no timer)
 
-    <!-- Copy Button: Linked to the div above -->
-    <button type="button" data-swj-copy="shareableLink">Copy Link</button>
-    ```
+### Question Types
 
-### Button Styling and Text
+#### 1. Multiple Choice
+```html
+<div data-swq-question-id="q1">
+    <p>Which planet is known as the Red Planet?</p>
+    <div 
+        data-swq-type="choice"
+        data-swq-answer="Mars"
+        data-swq-options='["Earth", "Mars", "Jupiter", "Venus"]'>
+    </div>
+</div>
+```
 
-The library uses CSS classes defined in `src/swj.css` (and bundled into `dist/swj.css` or `dist/swj.css`) to style the copy buttons according to their state. These classes are:
+#### 2. Multiple Select
+```html
+<div data-swq-question-id="q2">
+    <p>Select all programming languages:</p>
+    <div 
+        data-swq-type="select-multiple"
+        data-swq-answer="JavaScript,Python,Java"
+        data-swq-options='["JavaScript", "HTML", "Python", "CSS", "Java"]'>
+    </div>
+</div>
+```
 
--   **Base Button Class**: `swj-button`
--   **Default State**: `swj-button-default`
-    -   Text: "Copy" (or the button's original text if `data-swj-original-text` is set).
--   **Copied State** (shown for 2.5 seconds): `swj-button-copied`
-    -   Text: "Copied!"
--   **Error State** (shown for 2.5 seconds): `swj-button-error`
-    -   Text: "No ID", "No Src", "Empty", or "Failed!" depending on the error.
+#### 3. True/False
+```html
+<div data-swq-question-id="q3">
+    <p>The chemical symbol for water is H2O.</p>
+    <div data-swq-type="true/false" data-swq-answer="True"></div>
+</div>
+```
 
-The default styling provides a look similar to Tailwind CSS buttons. You can customize these styles by modifying `src/swj.css` and rebuilding the library, or by overriding these classes in your own stylesheet.
+#### 4. Text Input
+```html
+<div data-swq-question-id="q4">
+    <p>What is the capital of France?</p>
+    <div data-swq-type="text" data-swq-answer="Paris"></div>
+</div>
+```
 
-The attribute `data-swj-original-text` can be pre-set on a button if you want its default text to be something other than "Copy". If not set, the library will use the button's existing text content as the original text.
+#### 5. Number Input
+```html
+<div data-swq-question-id="q5">
+    <p>How many sides does a hexagon have?</p>
+    <div data-swq-type="number" data-swq-answer="6"></div>
+</div>
+```
+
+### Custom Control Buttons
+
+You can add custom control buttons for enhanced user interaction:
+
+```html
+<!-- Custom control buttons -->
+<button data-swq-check-answer>Submit Answer</button>
+<button data-swq-skip-question>Skip Question</button>
+<button data-swq-previous>Previous</button>
+<button data-swq-next>Next</button>
+
+<!-- Timer display -->
+<div data-swq-timer>5:00</div>
+
+<!-- Results container -->
+<div data-swq-results></div>
+```
+
+### Complete Example
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Quiz</title>
+    <link rel="stylesheet" href="path/to/dist/swq.css">
+</head>
+<body>
+    <div 
+        data-swq-quiz
+        data-swq-feedback-mode="immediate"
+        data-swq-timer="180">
+        
+        <div data-swq-question-id="q1">
+            <p>1. What is 2 + 2?</p>
+            <div 
+                data-swq-type="choice"
+                data-swq-answer="4"
+                data-swq-options='["2", "3", "4", "5"]'>
+            </div>
+        </div>
+        
+        <div data-swq-question-id="q2">
+            <p>2. Is JavaScript a programming language?</p>
+            <div data-swq-type="true/false" data-swq-answer="True"></div>
+        </div>
+        
+        <!-- Timer and results will be auto-generated -->
+        
+    </div>
+    
+    <script src="path/to/dist/swq.js"></script>
+</body>
+</html>
+```
+
+## Styling and Customization
+
+The library uses CSS classes defined in [`src/css/swq.css`](src/css/swq.css) for styling. Key classes include:
+
+- **Quiz Container**: `.swq-quiz-container`
+- **Questions**: `.swq-question`, `.swq-question-text`
+- **Options**: `.swq-option`, `.swq-options-container`
+- **Inputs**: `.swq-input`
+- **Feedback**: `.swq-feedback`, `.swq-correct`, `.swq-incorrect`
+- **Controls**: `[data-swq-next]`, `[data-swq-previous]`, `[data-swq-check-answer]`
+- **Results**: `.swq-results-default`, `.swq-result-summary`
+
+You can customize the appearance by overriding these classes in your own CSS or by modifying the source files and rebuilding.
+
+## API and Events
+
+### Programmatic Usage
+
+```javascript
+// Initialize quiz manually
+const quiz = SWQ.init('#my-quiz', {
+    settings: {
+        feedbackMode: 'retry',
+        allowBack: true,
+        timer: 300
+    }
+});
+
+// Or pass questions directly
+const quiz = SWQ.init('#my-quiz', {
+    questions: [
+        {
+            id: 'q1',
+            text: 'What is 2+2?',
+            type: 'choice',
+            answer: '4',
+            options: ['2', '3', '4', '5']
+        }
+    ]
+});
+```
+
+### Callback Events
+
+```javascript
+SWQ.init('#my-quiz', {
+    settings: {
+        onStart: function() {
+            console.log('Quiz started!');
+        },
+        onQuestionChange: function(question, index) {
+            console.log('Question changed:', question.text);
+        },
+        onComplete: function(results) {
+            console.log('Quiz completed:', results);
+            // results = { score, total, percentage, reason }
+        }
+    }
+});
+```
 
 ## Browser Support
 
-SenangWebs Jot works on all modern browsers.
+SenangWebs Quiz works on all modern browsers that support:
 
--   **Clipboard API Access:** The `navigator.clipboard.writeText()` API requires a secure context (HTTPS) in many browsers, or it might require user permission. When testing locally via `file://` protocol, it might not work as expected in some browsers due to security restrictions. The fallback `document.execCommand('copy')` is less secure and has some limitations but is provided for broader compatibility.
--   **Styling:** The default styling is provided by Tailwind CSS utility classes. If you are not using Tailwind CSS or want to customize the appearance, you will need to modify the class names directly in the `swj.js` file within the `setDefaultButtonState`, `setCopiedButtonState`, and `setErrorButtonState` methods.
--   **DOM Readiness:** SWJ initializes on the `DOMContentLoaded` event. Ensure your elements with `data-swj-*` attributes are present in the DOM when this event fires.
+- ES6 classes and arrow functions
+- `dataset` API for data attributes
+- `addEventListener` and modern DOM methods
+- CSS Flexbox for layout
 
-For older browsers, ensure they support the necessary Clipboard APIs or that the fallback mechanism is sufficient for your needs.
+The library automatically handles:
+- **Question Generation**: Creates appropriate input elements based on question type
+- **Answer Validation**: Handles different answer formats (single choice, multiple select, text comparison)
+- **State Management**: Tracks user progress and answers
+- **Timer Management**: Automatic countdown with quiz completion
+- **Results Calculation**: Score computation and display
 
 ## Contributing
 
@@ -128,11 +296,12 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
-This project is licensed under the MIT License. <!-- (Create a LICENSE.md file if it doesn't exist and this is the correct license) -->
+This project is licensed under the MIT License.
 
 ## Acknowledgments
 
-- Inspired by the need for a simple, effective copy-to-clipboard solution.
+- Inspired by the need for a simple, effective quiz creation solution.
+- Built with modern web standards for maximum compatibility.
 - Thanks to all contributors who have helped to improve this library.
 
 ## Support
