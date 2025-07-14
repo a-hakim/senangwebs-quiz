@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>SWQ Custom UI Demo</title>
+
+    <link rel="stylesheet" href="../dist/swq.css" />
+  </head>
+  <body>
+    <!-- HTML -->
+    <div
+      data-swq-quiz
+      id="my-html-quiz"
+      data-swq-feedback-mode="standard"
+      data-swq-allow-back="true"
+      data-swq-timer="120"
+    >
+      <p>Time Left: <strong data-swq-timer>2:00</strong></p>
+
+      <!-- Question 1 -->
+      <div data-swq-question-id="q1">
+        <p>Which planet is known as the Red Planet?</p>
+        <div
+          data-swq-type="choice"
+          data-swq-answer="Mars"
+          data-swq-options='["Earth", "Mars", "Jupiter", "Venus"]'
+        ></div>
+      </div>
+
+      <!-- Question 2 -->
+      <div data-swq-question-id="q2">
+        <p>Select all the programming languages.</p>
+        <div
+          data-swq-type="select-multiple"
+          data-swq-answer="JavaScript,Python"
+          data-swq-options='["JavaScript", "HTML", "Python", "CSS"]'
+        ></div>
+      </div>
+
+      <!-- Question 3 -->
+      <div data-swq-question-id="q3">
+        <p>The chemical symbol for water is H2O.</p>
+        <div data-swq-type="true/false" data-swq-answer="True"></div>
+      </div>
+
+      <!-- Your custom UI controls -->
+      <button data-swq-previous>Go Back</button>
+      <button data-swq-next>Check & Continue</button>
+
+      <div data-swq-results></div>
+    </div>
+
+    <script src="../dist/swq.js"></script>
+
+  </body>
+</html>

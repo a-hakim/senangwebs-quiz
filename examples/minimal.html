@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SWQ Fallback UI Demo</title>
+    <!-- Optional: Basic styling for generated elements -->
+    <style>
+        .swq-btn { padding: 8px 16px; margin: 5px; }
+        .swq-timer-display { font-size: 1.2em; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+    <div 
+        id="my-simple-quiz"
+        data-swq-quiz
+        data-swq-feedback-mode="retry"
+        data-swq-timer="60">
+
+        <div data-swq-question-id="q1">
+            <p>1. Is the sky blue?</p>
+            <div data-swq-type="true/false" data-swq-answer="True"></div>
+        </div>
+        <div data-swq-question-id="q2">
+            <p>2. What is 2 * 5?</p>
+            <div data-swq-type="number" data-swq-answer="10"></div>
+        </div>
+    </div>
+
+    <script src="../dist/swq.js"></script>
+</body>
+</html>
