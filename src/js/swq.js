@@ -95,13 +95,15 @@
             this.ui = {
                 nextBtn: this.element.querySelector('[data-swq-next]'),
                 prevBtn: this.element.querySelector('[data-swq-previous]'),
+                checkAnswerBtn: this.element.querySelector('[data-swq-check-answer]'),
+                skipBtn: this.element.querySelector('[data-swq-skip-question]'),
                 timerDisplay: this.element.querySelector('[data-swq-timer]'),
                 resultsContainer: this.element.querySelector('[data-swq-results]'),
                 questionsContainer: this.element.querySelector('[data-swq-answers]') || this.element
             };
 
             // Fallback: Create default controls if not provided
-            if (!this.ui.nextBtn && !this.ui.prevBtn) {
+            if (!this.ui.nextBtn && !this.ui.prevBtn && !this.ui.checkAnswerBtn) {
                 const controlsContainer = document.createElement('div');
                 controlsContainer.className = 'swq-controls-default';
                 
@@ -139,6 +141,8 @@
             // Add event listeners
             if (this.ui.nextBtn) this.ui.nextBtn.addEventListener('click', () => this._handleNext());
             if (this.ui.prevBtn) this.ui.prevBtn.addEventListener('click', () => this._handlePrevious());
+            if (this.ui.checkAnswerBtn) this.ui.checkAnswerBtn.addEventListener('click', () => this._handleCheckAnswer());
+            if (this.ui.skipBtn) this.ui.skipBtn.addEventListener('click', () => this._handleSkip());
         }
 
         // --- Public Methods & Core Logic ---
@@ -182,9 +186,11 @@
                 }
             });
             
-            // Hide controls and timer, but keep the container visible
+            // Hide all control buttons and timer, but keep the container visible
             if (this.ui.nextBtn) this.ui.nextBtn.style.display = 'none';
             if (this.ui.prevBtn) this.ui.prevBtn.style.display = 'none';
+            if (this.ui.checkAnswerBtn) this.ui.checkAnswerBtn.style.display = 'none';
+            if (this.ui.skipBtn) this.ui.skipBtn.style.display = 'none';
             if (this.ui.timerDisplay) this.ui.timerDisplay.style.display = 'none';
 
             // Calculate score
@@ -327,10 +333,33 @@
                 this.ui.prevBtn.disabled = (currentIndex <= 0) || !this.config.allowBack;
             }
 
-            // Next button text and state
-            if (this.ui.nextBtn) {
-                const isLastQuestion = currentIndex === totalQuestions - 1;
+            // Check if user has provided an answer
+            const answer = this._collectAnswer();
+            const hasAnswer = Array.isArray(answer) ? answer.length > 0 : (answer !== null && answer !== '' && answer !== undefined);
+            const isLastQuestion = currentIndex === totalQuestions - 1;
+
+            // Handle custom check answer button
+            if (this.ui.checkAnswerBtn) {
+                this.ui.checkAnswerBtn.disabled = !hasAnswer;
                 
+                // Update button text based on feedback mode and current state
+                if (this.config.feedbackMode === 'retry' && currentQuestionEl.classList.contains('swq-incorrect')) {
+                    this.ui.checkAnswerBtn.textContent = 'Try Again';
+                } else if (currentQuestionEl.classList.contains('swq-correct')) {
+                    this.ui.checkAnswerBtn.textContent = isLastQuestion ? 'Finish Quiz' : 'Continue';
+                } else {
+                    this.ui.checkAnswerBtn.textContent = 'Submit Answer';
+                }
+            }
+
+            // Handle skip button
+            if (this.ui.skipBtn) {
+                this.ui.skipBtn.disabled = !this.config.allowSkip;
+                this.ui.skipBtn.textContent = isLastQuestion ? 'Skip to Results' : 'Skip Question';
+            }
+
+            // Handle next button (if using default controls)
+            if (this.ui.nextBtn) {
                 // Determine button text based on feedback mode and current state
                 if (this.config.feedbackMode === 'retry' && currentQuestionEl.classList.contains('swq-incorrect')) {
                     this.ui.nextBtn.textContent = 'Try Again';
@@ -339,10 +368,6 @@
                 } else {
                     this.ui.nextBtn.textContent = isLastQuestion ? 'Finish Quiz' : 'Next';
                 }
-                
-                // Check if user has provided an answer
-                const answer = this._collectAnswer();
-                const hasAnswer = Array.isArray(answer) ? answer.length > 0 : (answer !== null && answer !== '' && answer !== undefined);
                 
                 // Only disable next button if no answer is given AND skipping is not allowed
                 this.ui.nextBtn.disabled = !hasAnswer && !this.config.allowSkip;
@@ -422,6 +447,51 @@
         _handlePrevious() {
             if (this.config.allowBack && this.state.currentIndex > 0) {
                 this._renderQuestion(this.state.currentIndex - 1);
+            }
+        }
+
+        _handleCheckAnswer() {
+            const question = this.questions[this.state.currentIndex];
+            const answer = this._collectAnswer();
+            const qElement = this._getOrCreateQuestionElement(question.id);
+            
+            // Don't process if no answer is provided
+            if (answer === null || answer === '' || (Array.isArray(answer) && answer.length === 0)) {
+                return;
+            }
+            
+            qElement.classList.remove('swq-incorrect', 'swq-correct');
+            
+            const isCorrect = this._isAnswerCorrect(question, answer);
+            
+            this.state.userAnswers[question.id] = { answer, isCorrect };
+
+            // Show feedback based on feedback mode
+            if (this.config.feedbackMode !== 'standard') {
+                qElement.classList.add(isCorrect ? 'swq-correct' : 'swq-incorrect');
+                this._showFeedback(question, isCorrect);
+                
+                if (this.config.feedbackMode === 'immediate') {
+                    qElement.querySelectorAll('input').forEach(input => input.disabled = true);
+                }
+            }
+            
+            this._updateControls();
+        }
+
+        _handleSkip() {
+            if (!this.config.allowSkip) return;
+            
+            const question = this.questions[this.state.currentIndex];
+            
+            // Record skipped answer
+            this.state.userAnswers[question.id] = { answer: null, isCorrect: false, skipped: true };
+            
+            // Move to next question or end quiz
+            if (this.state.currentIndex < this.questions.length - 1) {
+                this._renderQuestion(this.state.currentIndex + 1);
+            } else {
+                this._endQuiz();
             }
         }
 

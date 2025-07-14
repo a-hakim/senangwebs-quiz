@@ -109,6 +109,46 @@
     cursor: not-allowed;
 }
 
+/* Custom Control Buttons */
+[data-swq-check-answer], [data-swq-skip-question] {
+    padding: 10px 20px;
+    font-size: 1em;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 5px;
+    transition: background-color 0.2s;
+}
+
+[data-swq-check-answer] {
+    background-color: #28a745;
+    color: white;
+}
+
+[data-swq-check-answer]:hover {
+    background-color: #218838;
+}
+
+[data-swq-check-answer]:disabled {
+    background-color: #a0a0a0;
+    cursor: not-allowed;
+}
+
+[data-swq-skip-question] {
+    background-color: #6c757d;
+    color: white;
+}
+
+[data-swq-skip-question]:hover {
+    background-color: #5a6268;
+}
+
+[data-swq-skip-question]:disabled {
+    background-color: #a0a0a0;
+    cursor: not-allowed;
+}
+
 /* Results Display */
 .swq-results-default, [data-swq-results] {
     text-align: center;
