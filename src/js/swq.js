@@ -163,6 +163,18 @@
             this.state.isFinished = true;
             clearInterval(this.state.timerId);
 
+            // In standard mode, show all feedback now
+            if (this.config.feedbackMode === 'standard') {
+                this.questions.forEach(question => {
+                    const qElement = this._getOrCreateQuestionElement(question.id);
+                    const userAnswerData = this.state.userAnswers[question.id];
+                    if (userAnswerData) {
+                        qElement.classList.add(userAnswerData.isCorrect ? 'swq-correct' : 'swq-incorrect');
+                        this._showFeedback(question, userAnswerData.isCorrect);
+                    }
+                });
+            }
+
             // Hide quiz questions but not the entire container
             Array.from(this.ui.questionsContainer.children).forEach(child => {
                 if (child.dataset.swqQuestionId) {
@@ -318,10 +330,14 @@
             // Next button text and state
             if (this.ui.nextBtn) {
                 const isLastQuestion = currentIndex === totalQuestions - 1;
-                this.ui.nextBtn.textContent = isLastQuestion ? 'Finish' : 'Next';
                 
+                // Determine button text based on feedback mode and current state
                 if (this.config.feedbackMode === 'retry' && currentQuestionEl.classList.contains('swq-incorrect')) {
-                    this.ui.nextBtn.textContent = 'Check Answer';
+                    this.ui.nextBtn.textContent = 'Try Again';
+                } else if (this.config.feedbackMode === 'immediate') {
+                    this.ui.nextBtn.textContent = isLastQuestion ? 'Finish Quiz' : 'Next Question';
+                } else {
+                    this.ui.nextBtn.textContent = isLastQuestion ? 'Finish Quiz' : 'Next';
                 }
                 
                 // Check if user has provided an answer
@@ -364,21 +380,42 @@
             this.state.userAnswers[question.id] = { answer, isCorrect };
 
             // Handle feedback modes
-            if (this.config.feedbackMode === 'immediate' || this.config.feedbackMode === 'retry') {
+            if (this.config.feedbackMode === 'immediate') {
+                // Show feedback immediately and disable inputs
                 qElement.classList.add(isCorrect ? 'swq-correct' : 'swq-incorrect');
                 this._showFeedback(question, isCorrect);
-
-                if (this.config.feedbackMode === 'retry' && !isCorrect) {
-                     this._updateControls(); // Re-enable check button
-                     return; // Don't advance
+                qElement.querySelectorAll('input').forEach(input => input.disabled = true);
+                
+                // Always advance to next question in immediate mode
+                if (this.state.currentIndex < this.questions.length - 1) {
+                    this._renderQuestion(this.state.currentIndex + 1);
+                } else {
+                    this._endQuiz();
                 }
-            }
-            
-            // Advance to next question or end
-            if (this.state.currentIndex < this.questions.length - 1) {
-                this._renderQuestion(this.state.currentIndex + 1);
+            } else if (this.config.feedbackMode === 'retry') {
+                // Show feedback but allow retry if wrong
+                qElement.classList.add(isCorrect ? 'swq-correct' : 'swq-incorrect');
+                this._showFeedback(question, isCorrect);
+                
+                if (!isCorrect) {
+                    // Don't advance, allow user to try again
+                    this._updateControls(); // Update button to say "Check Answer"
+                    return;
+                } else {
+                    // Correct answer, advance
+                    if (this.state.currentIndex < this.questions.length - 1) {
+                        this._renderQuestion(this.state.currentIndex + 1);
+                    } else {
+                        this._endQuiz();
+                    }
+                }
             } else {
-                this._endQuiz();
+                // Standard mode - no feedback until end, just advance
+                if (this.state.currentIndex < this.questions.length - 1) {
+                    this._renderQuestion(this.state.currentIndex + 1);
+                } else {
+                    this._endQuiz();
+                }
             }
         }
         
@@ -461,11 +498,17 @@
             
             if (isCorrect) {
                 feedbackEl.textContent = "Correct!";
+                feedbackEl.className = 'swq-feedback swq-feedback-correct';
             } else {
-                feedbackEl.textContent = `Incorrect. The correct answer is: ${question.answer}`;
+                if (this.config.feedbackMode === 'retry') {
+                    feedbackEl.textContent = "Incorrect. Please try again.";
+                } else {
+                    feedbackEl.textContent = `Incorrect. The correct answer is: ${question.answer}`;
+                }
+                feedbackEl.className = 'swq-feedback swq-feedback-incorrect';
             }
             
-            // Disable inputs after feedback in 'immediate' mode
+            // Only disable inputs in immediate mode, not in retry mode
             if (this.config.feedbackMode === 'immediate') {
                 qElement.querySelectorAll('input').forEach(input => input.disabled = true);
             }

@@ -11,8 +11,9 @@
     <div
       data-swq-quiz
       id="my-html-quiz"
-      data-swq-feedback-mode="immediate"
+      data-swq-feedback-mode="retry"
       data-swq-allow-back="true"
+      data-swq-allow-skip="true"
       data-swq-timer="120"
     >
       <p>Time Left: <strong data-swq-timer>2:00</strong></p>
@@ -43,7 +44,8 @@
         <div data-swq-type="true/false" data-swq-answer="True"></div>
       </div>
 
-      <!-- Your custom UI controls -->
+      <button data-swq-check-answer>Submit</button>
+      <button data-swq-skip-question>Skip</button>
       <button data-swq-previous>Go Back</button>
       <button data-swq-next>Check & Continue</button>
 
