@@ -140,7 +140,8 @@
                 this.ui.timerDisplay = document.createElement('div');
                 this.ui.timerDisplay.className = 'swq-timer-default';
                 this.ui.timerDisplay.setAttribute('data-swq-timer', '');
-                this.element.insertBefore(this.ui.timerDisplay, this.ui.questionsContainer);
+                // Insert timer at the beginning of the quiz element instead of using insertBefore
+                this.element.insertAdjacentElement('afterbegin', this.ui.timerDisplay);
             }
             
             // Fallback: Create default results container if not provided
