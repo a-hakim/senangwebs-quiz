@@ -2,44 +2,45 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SWQ Complete Demo - All Question Types</title>
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
     <!-- SWQ Library CSS -->
     <link rel="stylesheet" href="../dist/swq.css" />
-    
-    <!-- Custom Tailwind Configuration -->
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              'swq-blue': '#2196f3',
-              'swq-blue-light': '#e3f2fd',
-              'swq-blue-dark': '#1976d2',
-              'swq-green': '#4caf50',
-              'swq-orange': '#ff9800',
-              'swq-red': '#f44336'
-            }
-          }
-        }
-      }
-    </script>
   </head>
   <body class="font-sans max-w-4xl mx-auto p-5 bg-gray-100 min-h-screen">
-    
     <!-- Demo Information Card -->
-    <div class="bg-swq-blue-light border border-swq-blue rounded-lg p-4 mb-5 shadow-sm">
-      <h2 class="text-2xl font-bold text-swq-blue-dark mb-3">SWQ Quiz Library - Complete Demo</h2>
-      <p class="text-gray-700 mb-3">This demo showcases all question types and features of the SWQ library:</p>
+    <div class="bg-blue-50 border border-blue-400 rounded-lg p-4 mb-5">
+      <h2 class="text-2xl font-bold text-blue-700 mb-3">
+        SWQ Quiz Library - Complete Demo
+      </h2>
+      <p class="text-gray-700 mb-3">
+        This demo showcases all question types and features of the SWQ library:
+      </p>
       <ul class="list-disc list-inside space-y-1 text-gray-700">
-        <li><strong class="text-swq-blue-dark">Multiple Choice</strong> - Single correct answer selection</li>
-        <li><strong class="text-swq-blue-dark">Multiple Select</strong> - Multiple correct answers selection</li>
-        <li><strong class="text-swq-blue-dark">True/False</strong> - Boolean question type</li>
-        <li><strong class="text-swq-blue-dark">Text Input</strong> - Free text answer (case-insensitive)</li>
-        <li><strong class="text-swq-blue-dark">Number Input</strong> - Numeric answer validation</li>
+        <li>
+          <strong class="text-blue-700">Multiple Choice</strong> - Single
+          correct answer selection
+        </li>
+        <li>
+          <strong class="text-blue-700">Multiple Select</strong> - Multiple
+          correct answers selection
+        </li>
+        <li>
+          <strong class="text-blue-700">True/False</strong> - Boolean
+          question type
+        </li>
+        <li>
+          <strong class="text-blue-700">Text Input</strong> - Free text
+          answer (case-insensitive)
+        </li>
+        <li>
+          <strong class="text-blue-700">Number Input</strong> - Numeric
+          answer validation
+        </li>
       </ul>
     </div>
 
@@ -51,17 +52,26 @@
       data-swq-allow-back="true"
       data-swq-allow-skip="true"
       data-swq-timer="300"
-      class="bg-white rounded-lg shadow-lg p-6 mb-5"
+      class="bg-white rounded-xl p-6 mb-5 border border-gray-200"
     >
       <!-- Timer Display -->
       <div class="text-right mb-4">
-        <p class="text-lg">Time Left: <strong data-swq-timer class="text-swq-red font-bold">5:00</strong></p>
+        <p class="text-lg">
+          Time Left:
+          <strong data-swq-timer class="text-red-600 font-bold">5:00</strong>
+        </p>
       </div>
 
       <!-- Question 1: Multiple Choice -->
-      <div data-swq-question-id="q1" class="mb-6 p-4 border border-gray-200 rounded-lg">
+      <div
+        data-swq-question-id="q1"
+        class="mb-6 p-4 border border-gray-200 rounded-lg"
+      >
         <p class="text-lg font-semibold text-gray-800 mb-3">
-          <span class="inline-block w-8 h-8 bg-swq-blue text-white rounded-full text-center text-sm leading-8 mr-2">1</span>
+          <span
+            class="inline-block w-8 h-8 bg-blue-500 text-white rounded-full text-center text-sm leading-8 mr-2"
+            >1</span
+          >
           Which planet is known as the Red Planet?
         </p>
         <div
@@ -72,9 +82,15 @@
       </div>
 
       <!-- Question 2: Multiple Select -->
-      <div data-swq-question-id="q2" class="mb-6 p-4 border border-gray-200 rounded-lg">
+      <div
+        data-swq-question-id="q2"
+        class="mb-6 p-4 border border-gray-200 rounded-lg"
+      >
         <p class="text-lg font-semibold text-gray-800 mb-3">
-          <span class="inline-block w-8 h-8 bg-swq-blue text-white rounded-full text-center text-sm leading-8 mr-2">2</span>
+          <span
+            class="inline-block w-8 h-8 bg-blue-500 text-white rounded-full text-center text-sm leading-8 mr-2"
+            >2</span
+          >
           Select all the programming languages from the list below:
         </p>
         <div
@@ -85,42 +101,60 @@
       </div>
 
       <!-- Question 3: True/False -->
-      <div data-swq-question-id="q3" class="mb-6 p-4 border border-gray-200 rounded-lg">
+      <div
+        data-swq-question-id="q3"
+        class="mb-6 p-4 border border-gray-200 rounded-lg"
+      >
         <p class="text-lg font-semibold text-gray-800 mb-3">
-          <span class="inline-block w-8 h-8 bg-swq-blue text-white rounded-full text-center text-sm leading-8 mr-2">3</span>
+          <span
+            class="inline-block w-8 h-8 bg-blue-500 text-white rounded-full text-center text-sm leading-8 mr-2"
+            >3</span
+          >
           The chemical symbol for water is H2O.
         </p>
         <div data-swq-type="true/false" data-swq-answer="True"></div>
       </div>
 
       <!-- Question 4: Text Input -->
-      <div data-swq-question-id="q4" class="mb-6 p-4 border border-gray-200 rounded-lg">
+      <div
+        data-swq-question-id="q4"
+        class="mb-6 p-4 border border-gray-200 rounded-lg"
+      >
         <p class="text-lg font-semibold text-gray-800 mb-3">
-          <span class="inline-block w-8 h-8 bg-swq-blue text-white rounded-full text-center text-sm leading-8 mr-2">4</span>
+          <span
+            class="inline-block w-8 h-8 bg-blue-500 text-white rounded-full text-center text-sm leading-8 mr-2"
+            >4</span
+          >
           What is the capital city of France?
         </p>
-        <div
-          data-swq-type="text"
-          data-swq-answer="Paris"
-        ></div>
+        <div data-swq-type="text" data-swq-answer="Paris"></div>
       </div>
 
       <!-- Question 5: Number Input -->
-      <div data-swq-question-id="q5" class="mb-6 p-4 border border-gray-200 rounded-lg">
+      <div
+        data-swq-question-id="q5"
+        class="mb-6 p-4 border border-gray-200 rounded-lg"
+      >
         <p class="text-lg font-semibold text-gray-800 mb-3">
-          <span class="inline-block w-8 h-8 bg-swq-blue text-white rounded-full text-center text-sm leading-8 mr-2">5</span>
+          <span
+            class="inline-block w-8 h-8 bg-blue-500 text-white rounded-full text-center text-sm leading-8 mr-2"
+            >5</span
+          >
           How many sides does a hexagon have?
         </p>
-        <div
-          data-swq-type="number"
-          data-swq-answer="6"
-        ></div>
+        <div data-swq-type="number" data-swq-answer="6"></div>
       </div>
 
       <!-- Question 6: Multiple Choice with More Options -->
-      <div data-swq-question-id="q6" class="mb-6 p-4 border border-gray-200 rounded-lg">
-        <p class="text-lg font-semibold text-gray-800 mb-3">
-          <span class="inline-block w-8 h-8 bg-swq-blue text-white rounded-full text-center text-sm leading-8 mr-2">6</span>
+      <div
+        data-swq-question-id="q6"
+        class="mb-6 p-4 border border-gray-200 rounded-lg"
+      >
+        <p class="text-lg font-semibold text-gray-800 mb-3"></p>
+          <span
+            class="inline-block w-8 h-8 bg-blue-500 text-white rounded-full text-center text-sm leading-8 mr-2"
+            >6</span
+          >
           Which of these is NOT a web browser?
         </p>
         <div
@@ -131,9 +165,15 @@
       </div>
 
       <!-- Question 7: Complex Multiple Select -->
-      <div data-swq-question-id="q7" class="mb-6 p-4 border border-gray-200 rounded-lg">
+      <div
+        data-swq-question-id="q7"
+        class="mb-6 p-4 border border-gray-200 rounded-lg"
+      >
         <p class="text-lg font-semibold text-gray-800 mb-3">
-          <span class="inline-block w-8 h-8 bg-swq-blue text-white rounded-full text-center text-sm leading-8 mr-2">7</span>
+          <span
+            class="inline-block w-8 h-8 bg-blue-500 text-white rounded-full text-center text-sm leading-8 mr-2"
+            >7</span
+          >
           Which of these are frontend technologies? (Select all that apply)
         </p>
         <div
@@ -144,9 +184,15 @@
       </div>
 
       <!-- Question 8: Text Input (Case Insensitive) -->
-      <div data-swq-question-id="q8" class="mb-6 p-4 border border-gray-200 rounded-lg">
+      <div
+        data-swq-question-id="q8"
+        class="mb-6 p-4 border border-gray-200 rounded-lg"
+      >
         <p class="text-lg font-semibold text-gray-800 mb-3">
-          <span class="inline-block w-8 h-8 bg-swq-blue text-white rounded-full text-center text-sm leading-8 mr-2">8</span>
+          <span
+            class="inline-block w-8 h-8 bg-blue-500 text-white rounded-full text-center text-sm leading-8 mr-2"
+            >8</span
+          >
           What does "HTML" stand for? (Type the full form)
         </p>
         <div
@@ -156,54 +202,69 @@
       </div>
 
       <!-- Question 9: Mathematical Number -->
-      <div data-swq-question-id="q9" class="mb-6 p-4 border border-gray-200 rounded-lg">
+      <div
+        data-swq-question-id="q9"
+        class="mb-6 p-4 border border-gray-200 rounded-lg"
+      >
         <p class="text-lg font-semibold text-gray-800 mb-3">
-          <span class="inline-block w-8 h-8 bg-swq-blue text-white rounded-full text-center text-sm leading-8 mr-2">9</span>
+          <span
+            class="inline-block w-8 h-8 bg-blue-500 text-white rounded-full text-center text-sm leading-8 mr-2"
+            >9</span
+          >
           What is 15 × 4?
         </p>
-        <div
-          data-swq-type="number"
-          data-swq-answer="60"
-        ></div>
+        <div data-swq-type="number" data-swq-answer="60"></div>
       </div>
 
       <!-- Question 10: True/False -->
-      <div data-swq-question-id="q10" class="mb-6 p-4 border border-gray-200 rounded-lg">
+      <div
+        data-swq-question-id="q10"
+        class="mb-6 p-4 border border-gray-200 rounded-lg"
+      >
         <p class="text-lg font-semibold text-gray-800 mb-3">
-          <span class="inline-block w-8 h-8 bg-swq-blue text-white rounded-full text-center text-sm leading-8 mr-2">10</span>
+          <span
+            class="inline-block w-8 h-8 bg-blue-500 text-white rounded-full text-center text-sm leading-8 mr-2"
+            >10</span
+          >
           JavaScript and Java are the same programming language.
         </p>
         <div data-swq-type="true/false" data-swq-answer="False"></div>
       </div>
 
-      <!-- Custom Control Buttons -->
-      <div class="flex flex-wrap justify-center gap-3 mt-8 p-4 bg-gray-50 rounded-lg">
-        <button 
-          data-swq-check-answer 
-          class="px-6 py-3 bg-swq-green text-white font-semibold rounded-lg hover:bg-green-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors duration-200 shadow-md">
-          Submit Answer
-        </button>
-        <button 
-          data-swq-skip-question 
-          class="px-6 py-3 bg-gray-500 text-white font-semibold rounded-lg hover:bg-gray-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors duration-200 shadow-md">
-          Skip Question
-        </button>
-      </div>
-      <div class="flex flex-wrap justify-center gap-3 mt-8 p-4 bg-gray-50 rounded-lg">
-        <button 
-          data-swq-previous 
-          class="px-6 py-3 bg-swq-blue text-white font-semibold rounded-lg hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors duration-200 shadow-md">
-          Previous
-        </button>
-        <button 
-          data-swq-next 
-          class="px-6 py-3 bg-swq-blue text-white font-semibold rounded-lg hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors duration-200 shadow-md">
-          Next >>
-        </button>
-      </div>
-
       <!-- Results Container -->
       <div data-swq-results class="mt-6"></div>
+
+      <!-- Custom Control Buttons -->
+      <div class="flex justify-between items-center flex-col lg:flex-row gap-3">
+        <div class="flex flex-wrap justify-end gap-3">
+          <button
+            data-swq-skip-question
+            class="px-6 py-3 bg-gray-500 text-white font-semibold rounded-lg hover:bg-gray-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors duration-200"
+          >
+            Skip
+          </button>
+          <button
+            data-swq-check-answer
+            class="px-6 py-3 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors duration-200"
+          >
+            Submit
+          </button>
+        </div>
+        <div class="flex flex-wrap justify-center gap-3">
+          <button
+            data-swq-previous
+            class="px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors duration-200"
+          >
+            ⬅️ Prev
+          </button>
+          <button
+            data-swq-next
+            class="px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors duration-200"
+          >
+            Next ➡️
+          </button>
+        </div>
+      </div>
     </div>
 
     <script src="../dist/swq.js"></script>
@@ -211,9 +272,8 @@
     <style>
       /* Custom styles for active feedback button state */
       .feedback-btn.active {
-        @apply bg-swq-blue text-white border-swq-blue;
+        @apply bg-blue-500 text-white border-blue-500;
       }
     </style>
-
   </body>
 </html>

@@ -356,31 +356,31 @@
                 this.ui.checkAnswerBtn.disabled = !hasAnswer;
                 
                 // Update button text based on feedback mode and current state
-                if (this.config.feedbackMode === 'retry' && currentQuestionEl.classList.contains('swq-incorrect')) {
-                    this.ui.checkAnswerBtn.textContent = 'Try Again';
-                } else if (currentQuestionEl.classList.contains('swq-correct')) {
-                    this.ui.checkAnswerBtn.textContent = isLastQuestion ? 'Finish Quiz' : 'Continue';
-                } else {
-                    this.ui.checkAnswerBtn.textContent = 'Submit Answer';
-                }
+                // if (this.config.feedbackMode === 'retry' && currentQuestionEl.classList.contains('swq-incorrect')) {
+                //     this.ui.checkAnswerBtn.textContent = 'Try Again';
+                // } else if (currentQuestionEl.classList.contains('swq-correct')) {
+                //     this.ui.checkAnswerBtn.textContent = isLastQuestion ? 'Finish Quiz' : 'Continue';
+                // } else {
+                //     this.ui.checkAnswerBtn.textContent = 'Submit Answer';
+                // }
             }
 
             // Handle skip button
             if (this.ui.skipBtn) {
                 this.ui.skipBtn.disabled = !this.config.allowSkip;
-                this.ui.skipBtn.textContent = isLastQuestion ? 'Skip to Results' : 'Skip Question';
+                // this.ui.skipBtn.textContent = isLastQuestion ? 'Skip to Results' : 'Skip Question';
             }
 
             // Handle next button (if using default controls)
             if (this.ui.nextBtn) {
                 // Determine button text based on feedback mode and current state
-                if (this.config.feedbackMode === 'retry' && currentQuestionEl.classList.contains('swq-incorrect')) {
-                    this.ui.nextBtn.textContent = 'Try Again';
-                } else if (this.config.feedbackMode === 'immediate') {
-                    this.ui.nextBtn.textContent = isLastQuestion ? 'Finish Quiz' : 'Next Question';
-                } else {
-                    this.ui.nextBtn.textContent = isLastQuestion ? 'Finish Quiz' : 'Next';
-                }
+                // if (this.config.feedbackMode === 'retry' && currentQuestionEl.classList.contains('swq-incorrect')) {
+                //     this.ui.nextBtn.textContent = 'Try Again';
+                // } else if (this.config.feedbackMode === 'immediate') {
+                //     this.ui.nextBtn.textContent = isLastQuestion ? 'Finish Quiz' : 'Next Question';
+                // } else {
+                //     this.ui.nextBtn.textContent = isLastQuestion ? 'Finish Quiz' : 'Next';
+                // }
                 
                 // Only disable next button if no answer is given AND skipping is not allowed
                 this.ui.nextBtn.disabled = !hasAnswer && !this.config.allowSkip;
