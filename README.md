@@ -1,248 +1,216 @@
 # SenangWebs Quiz (SWQ)
 
-Lightweight JavaScript library that lets you create interactive quizzes with various question types and feedback modes.
+A lightweight, flexible JavaScript library for creating interactive quizzes with multiple question types, configurable feedback modes, and built-in UI generation.
 
 ## Features
 
-- **Simple Integration:** Add a few data attributes to your HTML, and SWQ handles the rest.
-- **Multiple Question Types:** Support for multiple choice, multiple select, true/false, text input, and number input questions.
-- **Flexible Feedback Modes:** Choose from standard (feedback at end), immediate (feedback after each question), or retry (allow corrections) modes.
-- **Built-in Timer:** Optional countdown timer with automatic quiz completion when time expires.
-- **Navigation Controls:** Allow users to go back to previous questions and skip questions (configurable).
-- **Automatic UI Generation:** Generates question interfaces automatically or works with custom HTML structures.
-- **Modern Styling:** Clean, responsive design with Tailwind CSS-compatible classes.
-- Efficient performance and automatic initialization on `DOMContentLoaded`.
-- Comprehensive scoring and results display.
-- Works on all modern browsers.
+- **Zero Dependencies:** Pure JavaScript implementation with no external dependencies
+- **Multiple Question Types:** Choice (single select), multiple select, true/false, text input, and number input
+- **Three Feedback Modes:** 
+  - **Standard** - Show all feedback at quiz completion
+  - **Immediate** - Show feedback after each question with automatic progression
+  - **Retry** - Allow users to retry incorrect answers until they get them right
+- **Built-in Timer:** Optional countdown timer with automatic quiz termination
+- **Navigation Controls:** Configurable back/previous navigation and question skipping
+- **Automatic UI Generation:** Creates complete question interfaces from simple data attributes
+- **Fallback Controls:** Automatically generates navigation buttons, timer display, and results container when not provided
+- **Flexible Integration:** Works with existing HTML structures or generates everything automatically
+- **Modern Styling:** Clean, responsive CSS with customizable classes
+- **Smart Answer Validation:** Case-insensitive text matching, exact numeric comparison, and flexible multiple choice handling
+- **Comprehensive Results:** Detailed scoring with percentage calculation and completion reason tracking
 
-## Examples / Demo
+## Quick Start
 
-After running `npm run build` or `npm run dev`, you can open the example files in the `examples/` directory to see SenangWebs Quiz in action:
-
-- [`examples/custom-ui.html`](examples/custom-ui.html) - Complete demo showcasing all question types and features
-- [`examples/minimal.html`](examples/minimal.html) - Basic implementation with automatic UI generation
-
-## Installation
-
-SenangWebs Quiz is built using Webpack. The library's core files are located in the `src/` directory, and the distributable, production-ready files are generated in the `dist/` directory.
-
-### Using npm (Recommended for Development)
-
-1.  **Clone the Repository** (if you haven't already):
-    ```bash
-    git clone <repository-url> # Replace <repository-url> with the actual URL
-    cd senangwebs-quiz
-    ```
-
-2.  **Install Dependencies**:
-    Make sure you have Node.js and npm installed. Then, install the project dependencies:
-    ```bash
-    npm install
-    ```
-
-3.  **Build the Library**:
-    *   For a production build (minified JS and CSS):
-        ```bash
-        npm run build
-        ```
-    *   For a development build (with source maps and unminified files) and to watch for changes:
-        ```bash
-        npm run dev
-        ```
-    This will generate `swq.js` and `swq.css` in the `dist/` folder.
-
-### Using Pre-built Distributable Files (CDN-like or Direct Include)
-
-1.  **Include the CSS**:
-    Link the `swq.css` file in the `<head>` of your HTML:
-    ```html
-    <!-- If using local dist files -->
-    <link rel="stylesheet" href="path/to/dist/swq.css">
-
-    <!-- Or if using a CDN (replace with actual CDN link if available) -->
-    <link rel="stylesheet" href="https://unpkg.com/senangwebs-quiz@latest/dist/swq.css">
-    ```
-
-2.  **Include the JavaScript**:
-    Add the `swq.js` script to your HTML file, preferably at the end of the `<body>` tag:
-    ```html
-    <!-- If using local dist files -->
-    <script src="path/to/dist/swq.js"></script>
-
-    <!-- Or if using a CDN (replace with actual CDN link if available) -->
-    <script src="https://unpkg.com/senangwebs-quiz@latest/dist/swq.js"></script>
-    ```
-    The library initializes itself automatically on `DOMContentLoaded`.
-
-## Usage
-
-### Basic Setup
-
-1.  Ensure the SWQ CSS and JavaScript files are included in your HTML as described in the Installation section.
-
-2.  Create a quiz container with the `data-swq-quiz` attribute and configure it with optional settings:
-
+1. **Include the files:**
 ```html
-<div 
-    data-swq-quiz
-    data-swq-feedback-mode="immediate"
-    data-swq-allow-back="true"
-    data-swq-allow-skip="true"
-    data-swq-timer="300">
-    
-    <!-- Questions go here -->
-    
-</div>
+<link rel="stylesheet" href="dist/swq.css">
+<script src="dist/swq.js"></script>
 ```
 
-### Quiz Configuration Options
-
-Configure your quiz behavior using data attributes on the quiz container:
-
-- `data-swq-feedback-mode`: 
-  - `"standard"` - Show feedback only at the end (default)
-  - `"immediate"` - Show feedback after each question
-  - `"retry"` - Allow users to retry incorrect answers
-- `data-swq-allow-back="true"` - Enable previous question navigation
-- `data-swq-allow-skip="true"` - Allow users to skip questions
-- `data-swq-timer="300"` - Set timer in seconds (0 = no timer)
-
-### Question Types
-
-#### 1. Multiple Choice
+2. **Create a minimal quiz:**
 ```html
-<div data-swq-question-id="q1">
-    <p>Which planet is known as the Red Planet?</p>
-    <div 
-        data-swq-type="choice"
-        data-swq-answer="Mars"
-        data-swq-options='["Earth", "Mars", "Jupiter", "Venus"]'>
+<div data-swq-quiz data-swq-feedback-mode="immediate">
+    <div data-swq-question-id="q1">
+        <p>What is 2 + 2?</p>
+        <div data-swq-type="choice" data-swq-answer="4" 
+             data-swq-options='["2", "3", "4", "5"]'></div>
     </div>
 </div>
 ```
 
-#### 2. Multiple Select
-```html
-<div data-swq-question-id="q2">
-    <p>Select all programming languages:</p>
-    <div 
-        data-swq-type="select-multiple"
-        data-swq-answer="JavaScript,Python,Java"
-        data-swq-options='["JavaScript", "HTML", "Python", "CSS", "Java"]'>
-    </div>
-</div>
+The library automatically initializes on page load and generates all necessary UI elements.
+
+## Installation & Build
+
+### Development Setup
+
+```bash
+# Clone and install dependencies
+git clone <repository-url>
+cd senangwebs-quiz
+npm install
+
+# Development build with watch mode
+npm run dev
+
+# Production build (minified)
+npm run build
 ```
 
-#### 3. True/False
-```html
-<div data-swq-question-id="q3">
-    <p>The chemical symbol for water is H2O.</p>
-    <div data-swq-type="true/false" data-swq-answer="True"></div>
-</div>
-```
+This generates `swq.js` and `swq.css` in the `dist/` directory.
 
-#### 4. Text Input
-```html
-<div data-swq-question-id="q4">
-    <p>What is the capital of France?</p>
-    <div data-swq-type="text" data-swq-answer="Paris"></div>
-</div>
-```
+### Direct Usage
 
-#### 5. Number Input
-```html
-<div data-swq-question-id="q5">
-    <p>How many sides does a hexagon have?</p>
-    <div data-swq-type="number" data-swq-answer="6"></div>
-</div>
-```
-
-### Custom Control Buttons
-
-You can add custom control buttons for enhanced user interaction:
-
-```html
-<!-- Custom control buttons -->
-<button data-swq-check-answer>Submit Answer</button>
-<button data-swq-skip-question>Skip Question</button>
-<button data-swq-previous>Previous</button>
-<button data-swq-next>Next</button>
-
-<!-- Timer display -->
-<div data-swq-timer>5:00</div>
-
-<!-- Results container -->
-<div data-swq-results></div>
-```
-
-### Complete Example
+Include the built files in your HTML:
 
 ```html
 <!DOCTYPE html>
 <html>
 <head>
-    <title>My Quiz</title>
     <link rel="stylesheet" href="path/to/dist/swq.css">
 </head>
 <body>
-    <div 
-        data-swq-quiz
-        data-swq-feedback-mode="immediate"
-        data-swq-timer="180">
-        
-        <div data-swq-question-id="q1">
-            <p>1. What is 2 + 2?</p>
-            <div 
-                data-swq-type="choice"
-                data-swq-answer="4"
-                data-swq-options='["2", "3", "4", "5"]'>
-            </div>
-        </div>
-        
-        <div data-swq-question-id="q2">
-            <p>2. Is JavaScript a programming language?</p>
-            <div data-swq-type="true/false" data-swq-answer="True"></div>
-        </div>
-        
-        <!-- Timer and results will be auto-generated -->
-        
-    </div>
-    
+    <!-- Your quiz HTML here -->
     <script src="path/to/dist/swq.js"></script>
 </body>
 </html>
 ```
 
-## Styling and Customization
+## Quiz Configuration
 
-The library uses CSS classes defined in [`src/css/swq.css`](src/css/swq.css) for styling. Key classes include:
+Configure quiz behavior using data attributes on the main container:
 
-- **Quiz Container**: `.swq-quiz-container`
-- **Questions**: `.swq-question`, `.swq-question-text`
-- **Options**: `.swq-option`, `.swq-options-container`
-- **Inputs**: `.swq-input`
-- **Feedback**: `.swq-feedback`, `.swq-correct`, `.swq-incorrect`
-- **Controls**: `[data-swq-next]`, `[data-swq-previous]`, `[data-swq-check-answer]`
-- **Results**: `.swq-results-default`, `.swq-result-summary`
+| Attribute | Values | Default | Description |
+|-----------|--------|---------|-------------|
+| `data-swq-quiz` | - | required | Marks the quiz container |
+| `data-swq-feedback-mode` | `standard`, `immediate`, `retry` | `standard` | When to show feedback |
+| `data-swq-allow-back` | `true`, `false` | `false` | Enable previous question navigation |
+| `data-swq-allow-skip` | `true`, `false` | `false` | Allow skipping questions |
+| `data-swq-timer` | number (seconds) | `0` | Quiz time limit (0 = no timer) |
 
-You can customize the appearance by overriding these classes in your own CSS or by modifying the source files and rebuilding.
+```html
+<div data-swq-quiz 
+     data-swq-feedback-mode="retry"
+     data-swq-allow-back="true" 
+     data-swq-allow-skip="true"
+     data-swq-timer="300">
+    <!-- Questions here -->
+</div>
+```
 
-## API and Events
+## Question Types
 
-### Programmatic Usage
+### 1. Multiple Choice (Single Answer)
+```html
+<div data-swq-question-id="unique-id">
+    <p>Which planet is closest to the Sun?</p>
+    <div data-swq-type="choice" 
+         data-swq-answer="Mercury"
+         data-swq-options='["Mercury", "Venus", "Earth", "Mars"]'></div>
+</div>
+```
+
+### 2. Multiple Select (Multiple Answers)
+```html
+<div data-swq-question-id="colors">
+    <p>Select all primary colors:</p>
+    <div data-swq-type="select-multiple" 
+         data-swq-answer="Red,Blue,Yellow"
+         data-swq-options='["Red", "Green", "Blue", "Yellow", "Purple"]'></div>
+</div>
+```
+
+### 3. True/False
+```html
+<div data-swq-question-id="boolean">
+    <p>JavaScript is a compiled language.</p>
+    <div data-swq-type="true/false" data-swq-answer="False"></div>
+</div>
+```
+
+### 4. Text Input (Case-Insensitive)
+```html
+<div data-swq-question-id="capital">
+    <p>What is the capital of Japan?</p>
+    <div data-swq-type="text" data-swq-answer="Tokyo"></div>
+</div>
+```
+
+### 5. Number Input
+```html
+<div data-swq-question-id="math">
+    <p>What is 12 × 8?</p>
+    <div data-swq-type="number" data-swq-answer="96"></div>
+</div>
+```
+
+## Feedback Modes Explained
+
+### Standard Mode (Default)
+- No feedback shown during quiz
+- All results displayed at completion
+- Questions marked as correct/incorrect at the end
+
+### Immediate Mode
+- Feedback shown after each answer submission
+- Automatic progression to next question
+- Inputs disabled after answering
+
+### Retry Mode
+- Feedback shown immediately
+- Incorrect answers can be retried
+- Must get correct answer to proceed
+
+## Custom UI Elements
+
+SWQ automatically generates missing UI elements, but you can provide custom ones:
+
+```html
+<div data-swq-quiz>
+    <!-- Custom timer display -->
+    <div data-swq-timer class="my-timer">5:00</div>
+    
+    <!-- Questions here -->
+    
+    <!-- Custom controls -->
+    <button data-swq-previous>← Back</button>
+    <button data-swq-check-answer>Submit</button>
+    <button data-swq-skip-question>Skip</button>
+    <button data-swq-next>Next →</button>
+    
+    <!-- Custom results container -->
+    <div data-swq-results class="my-results"></div>
+</div>
+```
+
+## JavaScript API
+
+### Programmatic Initialization
 
 ```javascript
-// Initialize quiz manually
+// Basic initialization (auto-finds [data-swq-quiz] elements)
+const quizzes = SWQ.init('[data-swq-quiz]');
+
+// With custom options
 const quiz = SWQ.init('#my-quiz', {
     settings: {
-        feedbackMode: 'retry',
+        feedbackMode: 'immediate',
         allowBack: true,
-        timer: 300
+        timer: 180,
+        onStart: function() {
+            console.log('Quiz started!');
+        },
+        onQuestionChange: function(question, index) {
+            console.log(`Question ${index + 1}: ${question.text}`);
+        },
+        onComplete: function(results) {
+            console.log(`Score: ${results.score}/${results.total} (${results.percentage}%)`);
+        }
     }
 });
 
-// Or pass questions directly
-const quiz = SWQ.init('#my-quiz', {
+// Pass questions programmatically
+const quiz = SWQ.init('#container', {
     questions: [
         {
             id: 'q1',
@@ -250,60 +218,118 @@ const quiz = SWQ.init('#my-quiz', {
             type: 'choice',
             answer: '4',
             options: ['2', '3', '4', '5']
+        },
+        {
+            id: 'q2', 
+            text: 'Enter your name:',
+            type: 'text',
+            answer: 'Expected Answer'
         }
     ]
 });
 ```
 
-### Callback Events
+### Event Callbacks
 
+| Callback | Parameters | Description |
+|----------|------------|-------------|
+| `onStart` | - | Called when quiz begins |
+| `onQuestionChange` | `question`, `index` | Called when question changes |
+| `onComplete` | `results` | Called when quiz ends |
+
+Results object structure:
 ```javascript
-SWQ.init('#my-quiz', {
-    settings: {
-        onStart: function() {
-            console.log('Quiz started!');
-        },
-        onQuestionChange: function(question, index) {
-            console.log('Question changed:', question.text);
-        },
-        onComplete: function(results) {
-            console.log('Quiz completed:', results);
-            // results = { score, total, percentage, reason }
-        }
-    }
-});
+{
+    score: 8,           // Number of correct answers
+    total: 10,          // Total questions
+    percentage: 80,     // Score percentage
+    reason: 'completed' // 'completed' or 'time_up'
+}
 ```
+
+## Styling & Customization
+
+### Key CSS Classes
+
+| Class | Description |
+|-------|-------------|
+| `.swq-question` | Individual question container |
+| `.swq-question-text` | Question text styling |
+| `.swq-options-container` | Container for answer options |
+| `.swq-option` | Individual option (radio/checkbox) |
+| `.swq-input` | Text/number input fields |
+| `.swq-feedback` | Feedback message area |
+| `.swq-correct` | Applied to correct answers |
+| `.swq-incorrect` | Applied to incorrect answers |
+| `.swq-controls-default` | Default button container |
+| `.swq-results-default` | Default results display |
+
+### Custom Styling Example
+
+```css
+/* Override default styles */
+.swq-question {
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+}
+
+.swq-option:hover {
+    background-color: #f7fafc;
+    border-color: #4299e1;
+}
+
+.swq-correct {
+    border-color: #48bb78;
+    background-color: #f0fff4;
+}
+
+.swq-incorrect {
+    border-color: #f56565;
+    background-color: #fff5f5;  
+}
+```
+
+## Examples
+
+Check the `examples/` directory for complete implementations:
+
+- **`examples/minimal.html`** - Basic quiz with automatic UI generation
+- **`examples/custom-ui.html`** - Advanced quiz with custom styling and all question types
 
 ## Browser Support
 
-SenangWebs Quiz works on all modern browsers that support:
+Works in all modern browsers supporting:
+- ES6 Classes and Arrow Functions
+- Dataset API for data attributes  
+- Modern DOM methods (`querySelector`, `addEventListener`)
+- CSS Flexbox
 
-- ES6 classes and arrow functions
-- `dataset` API for data attributes
-- `addEventListener` and modern DOM methods
-- CSS Flexbox for layout
+## Advanced Features
 
-The library automatically handles:
-- **Question Generation**: Creates appropriate input elements based on question type
-- **Answer Validation**: Handles different answer formats (single choice, multiple select, text comparison)
-- **State Management**: Tracks user progress and answers
-- **Timer Management**: Automatic countdown with quiz completion
-- **Results Calculation**: Score computation and display
+### Answer Validation Logic
+- **Text answers:** Case-insensitive matching with whitespace trimming
+- **Multiple select:** Order-independent array comparison
+- **Numbers:** Exact numeric matching
+- **Choice/True-False:** String comparison
 
-## Contributing
+### State Management
+- Tracks user answers with correctness status
+- Maintains current question index
+- Handles timer state and progression
+- Preserves answers when navigating between questions
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+### Automatic UI Generation
+- Creates appropriate input elements based on question type
+- Generates default navigation buttons when not provided
+- Automatically creates timer display and results container
+- Handles responsive layout and accessibility
 
 ## License
 
-This project is licensed under the MIT License.
+MIT License - see LICENSE file for details.
 
-## Acknowledgments
+## Contributing
 
-- Inspired by the need for a simple, effective quiz creation solution.
-- Built with modern web standards for maximum compatibility.
-- Thanks to all contributors who have helped to improve this library.
-
-## Support
-
-If you encounter any issues or have questions, please file an issue on the GitHub repository.
+Contributions welcome! Please ensure any changes maintain backward compatibility and include

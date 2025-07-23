@@ -1,7 +1,7 @@
 {
   "name": "senangwebs-quiz",
   "version": "1.0.0",
-  "description": "Lightweight JavaScript tool that lets you create interactive quiz.",
+  "description": "Lightweight JavaScript library that lets you create interactive quizzes with various question types and feedback modes.",
   "main": "dist/swj.min.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
