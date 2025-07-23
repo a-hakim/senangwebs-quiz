@@ -42,6 +42,50 @@ The library automatically initializes on page load and generates all necessary U
 
 ## Installation & Build
 
+### Using CDN (Quickest Start)
+
+For the fastest setup, include SWQ directly from a CDN:
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Quiz</title>
+    <!-- SWQ CSS from CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/senangwebs-quiz@latest/dist/swq.css">
+</head>
+<body>
+    <div data-swq-quiz data-swq-feedback-mode="immediate" data-swq-timer="120">
+        <div data-swq-question-id="q1">
+            <p>What is the capital of France?</p>
+            <div data-swq-type="text" data-swq-answer="Paris"></div>
+        </div>
+        
+        <div data-swq-question-id="q2">
+            <p>Which planet is known as the Red Planet?</p>
+            <div data-swq-type="choice" 
+                 data-swq-answer="Mars"
+                 data-swq-options='["Earth", "Mars", "Jupiter", "Venus"]'></div>
+        </div>
+    </div>
+    
+    <!-- SWQ JavaScript from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/senangwebs-quiz@latest/dist/swq.js"></script>
+</body>
+</html>
+```
+
+**Alternative CDNs:**
+```html
+<!-- unpkg CDN -->
+<link rel="stylesheet" href="https://unpkg.com/senangwebs-quiz@latest/dist/swq.css">
+<script src="https://unpkg.com/senangwebs-quiz@latest/dist/swq.js"></script>
+
+<!-- GitHub CDN (replace 'main' with specific version tag) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/username/senangwebs-quiz@main/dist/swq.css">
+<script src="https://cdn.jsdelivr.net/gh/username/senangwebs-quiz@main/dist/swq.js"></script>
+```
+
 ### Development Setup
 
 ```bash
