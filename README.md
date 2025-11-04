@@ -376,4 +376,4 @@ MIT License - see LICENSE file for details.
 
 ## Contributing
 
-Contributions welcome! Please ensure any changes maintain backward compatibility and include
+Contributions are welcome! Please feel free to submit a Pull Request.
