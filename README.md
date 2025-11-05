@@ -4,9 +4,8 @@ A lightweight, flexible JavaScript library for creating interactive quizzes with
 
 ## Features
 
-- **Zero Dependencies:** Pure JavaScript implementation with no external dependencies
 - **Multiple Question Types:** Choice (single select), multiple select, true/false, text input, and number input
-- **Three Feedback Modes:** 
+- **Three Feedback Modes:**
   - **Standard** - Show all feedback at quiz completion
   - **Immediate** - Show feedback after each question with automatic progression
   - **Retry** - Allow users to retry incorrect answers until they get them right
@@ -22,12 +21,14 @@ A lightweight, flexible JavaScript library for creating interactive quizzes with
 ## Quick Start
 
 1. **Include the files:**
+
 ```html
 <link rel="stylesheet" href="dist/swq.css">
 <script src="dist/swq.js"></script>
 ```
 
 2. **Create a minimal quiz:**
+
 ```html
 <div data-swq-quiz data-swq-feedback-mode="immediate">
     <div data-swq-question-id="q1">
@@ -60,7 +61,7 @@ For the fastest setup, include SWQ directly from a CDN:
             <p>What is the capital of France?</p>
             <div data-swq-type="text" data-swq-answer="Paris"></div>
         </div>
-        
+    
         <div data-swq-question-id="q2">
             <p>Which planet is known as the Red Planet?</p>
             <div data-swq-type="choice" 
@@ -68,7 +69,7 @@ For the fastest setup, include SWQ directly from a CDN:
                  data-swq-options='["Earth", "Mars", "Jupiter", "Venus"]'></div>
         </div>
     </div>
-    
+  
     <!-- SWQ JavaScript from CDN -->
     <script src="https://cdn.jsdelivr.net/npm/senangwebs-quiz@latest/dist/swq.js"></script>
 </body>
@@ -76,6 +77,7 @@ For the fastest setup, include SWQ directly from a CDN:
 ```
 
 **Alternative CDNs:**
+
 ```html
 <!-- unpkg CDN -->
 <link rel="stylesheet" href="https://unpkg.com/senangwebs-quiz@latest/dist/swq.css">
@@ -86,51 +88,18 @@ For the fastest setup, include SWQ directly from a CDN:
 <script src="https://cdn.jsdelivr.net/gh/username/senangwebs-quiz@main/dist/swq.js"></script>
 ```
 
-### Development Setup
-
-```bash
-# Clone and install dependencies
-git clone <repository-url>
-cd senangwebs-quiz
-npm install
-
-# Development build with watch mode
-npm run dev
-
-# Production build (minified)
-npm run build
-```
-
-This generates `swq.js` and `swq.css` in the `dist/` directory.
-
-### Direct Usage
-
-Include the built files in your HTML:
-
-```html
-<!DOCTYPE html>
-<html>
-<head>
-    <link rel="stylesheet" href="path/to/dist/swq.css">
-</head>
-<body>
-    <!-- Your quiz HTML here -->
-    <script src="path/to/dist/swq.js"></script>
-</body>
-</html>
-```
-
 ## Quiz Configuration
 
 Configure quiz behavior using data attributes on the main container:
 
-| Attribute | Values | Default | Description |
-|-----------|--------|---------|-------------|
-| `data-swq-quiz` | - | required | Marks the quiz container |
-| `data-swq-feedback-mode` | `standard`, `immediate`, `retry` | `standard` | When to show feedback |
-| `data-swq-allow-back` | `true`, `false` | `false` | Enable previous question navigation |
-| `data-swq-allow-skip` | `true`, `false` | `false` | Allow skipping questions |
-| `data-swq-timer` | number (seconds) | `0` | Quiz time limit (0 = no timer) |
+
+| Attribute                | Values                           | Default    | Description                         |
+| -------------------------- | ---------------------------------- | ------------ | ------------------------------------- |
+| `data-swq-quiz`          | -                                | required   | Marks the quiz container            |
+| `data-swq-feedback-mode` | `standard`, `immediate`, `retry` | `standard` | When to show feedback               |
+| `data-swq-allow-back`    | `true`, `false`                  | `false`    | Enable previous question navigation |
+| `data-swq-allow-skip`    | `true`, `false`                  | `false`    | Allow skipping questions            |
+| `data-swq-timer`         | number (seconds)                 | `0`        | Quiz time limit (0 = no timer)      |
 
 ```html
 <div data-swq-quiz 
@@ -145,6 +114,7 @@ Configure quiz behavior using data attributes on the main container:
 ## Question Types
 
 ### 1. Multiple Choice (Single Answer)
+
 ```html
 <div data-swq-question-id="unique-id">
     <p>Which planet is closest to the Sun?</p>
@@ -155,6 +125,7 @@ Configure quiz behavior using data attributes on the main container:
 ```
 
 ### 2. Multiple Select (Multiple Answers)
+
 ```html
 <div data-swq-question-id="colors">
     <p>Select all primary colors:</p>
@@ -165,6 +136,7 @@ Configure quiz behavior using data attributes on the main container:
 ```
 
 ### 3. True/False
+
 ```html
 <div data-swq-question-id="boolean">
     <p>JavaScript is a compiled language.</p>
@@ -173,6 +145,7 @@ Configure quiz behavior using data attributes on the main container:
 ```
 
 ### 4. Text Input (Case-Insensitive)
+
 ```html
 <div data-swq-question-id="capital">
     <p>What is the capital of Japan?</p>
@@ -181,6 +154,7 @@ Configure quiz behavior using data attributes on the main container:
 ```
 
 ### 5. Number Input
+
 ```html
 <div data-swq-question-id="math">
     <p>What is 12 × 8?</p>
@@ -191,16 +165,19 @@ Configure quiz behavior using data attributes on the main container:
 ## Feedback Modes Explained
 
 ### Standard Mode (Default)
+
 - No feedback shown during quiz
 - All results displayed at completion
 - Questions marked as correct/incorrect at the end
 
 ### Immediate Mode
+
 - Feedback shown after each answer submission
 - Automatic progression to next question
 - Inputs disabled after answering
 
 ### Retry Mode
+
 - Feedback shown immediately
 - Incorrect answers can be retried
 - Must get correct answer to proceed
@@ -213,15 +190,15 @@ SWQ automatically generates missing UI elements, but you can provide custom ones
 <div data-swq-quiz>
     <!-- Custom timer display -->
     <div data-swq-timer class="my-timer">5:00</div>
-    
+  
     <!-- Questions here -->
-    
+  
     <!-- Custom controls -->
     <button data-swq-previous>← Back</button>
     <button data-swq-check-answer>Submit</button>
     <button data-swq-skip-question>Skip</button>
     <button data-swq-next>Next →</button>
-    
+  
     <!-- Custom results container -->
     <div data-swq-results class="my-results"></div>
 </div>
@@ -275,13 +252,15 @@ const quiz = SWQ.init('#container', {
 
 ### Event Callbacks
 
-| Callback | Parameters | Description |
-|----------|------------|-------------|
-| `onStart` | - | Called when quiz begins |
+
+| Callback           | Parameters          | Description                  |
+| -------------------- | --------------------- | ------------------------------ |
+| `onStart`          | -                   | Called when quiz begins      |
 | `onQuestionChange` | `question`, `index` | Called when question changes |
-| `onComplete` | `results` | Called when quiz ends |
+| `onComplete`       | `results`           | Called when quiz ends        |
 
 Results object structure:
+
 ```javascript
 {
     score: 8,           // Number of correct answers
@@ -295,18 +274,19 @@ Results object structure:
 
 ### Key CSS Classes
 
-| Class | Description |
-|-------|-------------|
-| `.swq-question` | Individual question container |
-| `.swq-question-text` | Question text styling |
-| `.swq-options-container` | Container for answer options |
-| `.swq-option` | Individual option (radio/checkbox) |
-| `.swq-input` | Text/number input fields |
-| `.swq-feedback` | Feedback message area |
-| `.swq-correct` | Applied to correct answers |
-| `.swq-incorrect` | Applied to incorrect answers |
-| `.swq-controls-default` | Default button container |
-| `.swq-results-default` | Default results display |
+
+| Class                    | Description                        |
+| -------------------------- | ------------------------------------ |
+| `.swq-question`          | Individual question container      |
+| `.swq-question-text`     | Question text styling              |
+| `.swq-options-container` | Container for answer options       |
+| `.swq-option`            | Individual option (radio/checkbox) |
+| `.swq-input`             | Text/number input fields           |
+| `.swq-feedback`          | Feedback message area              |
+| `.swq-correct`           | Applied to correct answers         |
+| `.swq-incorrect`         | Applied to incorrect answers       |
+| `.swq-controls-default`  | Default button container           |
+| `.swq-results-default`   | Default results display            |
 
 ### Custom Styling Example
 
@@ -345,26 +325,30 @@ Check the `examples/` directory for complete implementations:
 ## Browser Support
 
 Works in all modern browsers supporting:
+
 - ES6 Classes and Arrow Functions
-- Dataset API for data attributes  
+- Dataset API for data attributes
 - Modern DOM methods (`querySelector`, `addEventListener`)
 - CSS Flexbox
 
 ## Advanced Features
 
 ### Answer Validation Logic
+
 - **Text answers:** Case-insensitive matching with whitespace trimming
 - **Multiple select:** Order-independent array comparison
 - **Numbers:** Exact numeric matching
 - **Choice/True-False:** String comparison
 
 ### State Management
+
 - Tracks user answers with correctness status
 - Maintains current question index
 - Handles timer state and progression
 - Preserves answers when navigating between questions
 
 ### Automatic UI Generation
+
 - Creates appropriate input elements based on question type
 - Generates default navigation buttons when not provided
 - Automatically creates timer display and results container
