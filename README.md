@@ -2,6 +2,8 @@
 
 A lightweight, flexible JavaScript library for creating interactive quizzes with multiple question types, configurable feedback modes, and built-in UI generation.
 
+![SenangWebs Quiz Preview](https://raw.githubusercontent.com/a-hakim/senangwebs-quiz/master/swq_preview.png)
+
 ## Features
 
 - **Multiple Question Types:** Choice (single select), multiple select, true/false, text input, and number input
