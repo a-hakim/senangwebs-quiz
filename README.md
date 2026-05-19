@@ -6,7 +6,7 @@ A lightweight, flexible JavaScript library for creating interactive quizzes with
 
 ## Features
 
-- **Multiple Question Types:** Choice (single select), multiple select, true/false, text input, and number input
+- **Multiple Question Types:** Choice (single select), multiple select, true/false (or `boolean`), text input, and number input
 - **Three Feedback Modes:**
   - **Standard** - Show all feedback at quiz completion
   - **Immediate** - Show feedback after each question with automatic progression
@@ -17,16 +17,23 @@ A lightweight, flexible JavaScript library for creating interactive quizzes with
 - **Fallback Controls:** Automatically generates navigation buttons, timer display, and results container when not provided
 - **Flexible Integration:** Works with existing HTML structures or generates everything automatically
 - **Modern Styling:** Clean, responsive CSS with customizable classes
-- **Smart Answer Validation:** Case-insensitive text matching, exact numeric comparison, and flexible multiple choice handling
+- **Smart Answer Validation:** Case-insensitive text matching, numeric comparison, and flexible multiple choice handling
 - **Comprehensive Results:** Detailed scoring with percentage calculation and completion reason tracking
+- **Quiz Lifecycle:** `reset()` to retake a quiz and `destroy()` for proper cleanup
+- **CSP Compatible:** No inline event handlers - works under Content Security Policy
 
 ## Quick Start
 
 1. **Include the files:**
 
 ```html
+<!-- Unminified (development) -->
 <link rel="stylesheet" href="dist/swq.css">
 <script src="dist/swq.js"></script>
+
+<!-- Minified (production) -->
+<link rel="stylesheet" href="dist/swq.min.css">
+<script src="dist/swq.min.js"></script>
 ```
 
 2. **Create a minimal quiz:**
@@ -35,7 +42,7 @@ A lightweight, flexible JavaScript library for creating interactive quizzes with
 <div data-swq-quiz data-swq-feedback-mode="immediate">
     <div data-swq-question-id="q1">
         <p>What is 2 + 2?</p>
-        <div data-swq-type="choice" data-swq-answer="4" 
+        <div data-swq-type="choice" data-swq-answer="4"
              data-swq-options='["2", "3", "4", "5"]'></div>
     </div>
 </div>
@@ -47,15 +54,12 @@ The library automatically initializes on page load and generates all necessary U
 
 ### Using CDN (Quickest Start)
 
-For the fastest setup, include SWQ directly from a CDN:
-
 ```html
 <!DOCTYPE html>
 <html>
 <head>
     <title>My Quiz</title>
-    <!-- SWQ CSS from CDN -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/senangwebs-quiz@latest/dist/swq.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/senangwebs-quiz@latest/dist/swq.min.css">
 </head>
 <body>
     <div data-swq-quiz data-swq-feedback-mode="immediate" data-swq-timer="120">
@@ -63,17 +67,16 @@ For the fastest setup, include SWQ directly from a CDN:
             <p>What is the capital of France?</p>
             <div data-swq-type="text" data-swq-answer="Paris"></div>
         </div>
-    
+
         <div data-swq-question-id="q2">
             <p>Which planet is known as the Red Planet?</p>
-            <div data-swq-type="choice" 
+            <div data-swq-type="choice"
                  data-swq-answer="Mars"
                  data-swq-options='["Earth", "Mars", "Jupiter", "Venus"]'></div>
         </div>
     </div>
-  
-    <!-- SWQ JavaScript from CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/senangwebs-quiz@latest/dist/swq.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/senangwebs-quiz@latest/dist/swq.min.js"></script>
 </body>
 </html>
 ```
@@ -82,31 +85,37 @@ For the fastest setup, include SWQ directly from a CDN:
 
 ```html
 <!-- unpkg CDN -->
-<link rel="stylesheet" href="https://unpkg.com/senangwebs-quiz@latest/dist/swq.css">
-<script src="https://unpkg.com/senangwebs-quiz@latest/dist/swq.js"></script>
-
-<!-- GitHub CDN (replace 'main' with specific version tag) -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/username/senangwebs-quiz@main/dist/swq.css">
-<script src="https://cdn.jsdelivr.net/gh/username/senangwebs-quiz@main/dist/swq.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/senangwebs-quiz@latest/dist/swq.min.css">
+<script src="https://unpkg.com/senangwebs-quiz@latest/dist/swq.min.js"></script>
 ```
+
+### Local Build
+
+```bash
+npm install
+npm run build
+```
+
+Outputs all four files to `dist/`:
+- `swq.js` / `swq.css` -- unminified with source maps (development)
+- `swq.min.js` / `swq.min.css` -- minified (production)
 
 ## Quiz Configuration
 
 Configure quiz behavior using data attributes on the main container:
 
-
 | Attribute                | Values                           | Default    | Description                         |
-| -------------------------- | ---------------------------------- | ------------ | ------------------------------------- |
-| `data-swq-quiz`          | -                                | required   | Marks the quiz container            |
+| ------------------------ | -------------------------------- | ---------- | ----------------------------------- |
+| `data-swq-quiz`          | --                               | required   | Marks the quiz container            |
 | `data-swq-feedback-mode` | `standard`, `immediate`, `retry` | `standard` | When to show feedback               |
 | `data-swq-allow-back`    | `true`, `false`                  | `false`    | Enable previous question navigation |
 | `data-swq-allow-skip`    | `true`, `false`                  | `false`    | Allow skipping questions            |
 | `data-swq-timer`         | number (seconds)                 | `0`        | Quiz time limit (0 = no timer)      |
 
 ```html
-<div data-swq-quiz 
+<div data-swq-quiz
      data-swq-feedback-mode="retry"
-     data-swq-allow-back="true" 
+     data-swq-allow-back="true"
      data-swq-allow-skip="true"
      data-swq-timer="300">
     <!-- Questions here -->
@@ -120,7 +129,7 @@ Configure quiz behavior using data attributes on the main container:
 ```html
 <div data-swq-question-id="unique-id">
     <p>Which planet is closest to the Sun?</p>
-    <div data-swq-type="choice" 
+    <div data-swq-type="choice"
          data-swq-answer="Mercury"
          data-swq-options='["Mercury", "Venus", "Earth", "Mars"]'></div>
 </div>
@@ -128,16 +137,20 @@ Configure quiz behavior using data attributes on the main container:
 
 ### 2. Multiple Select (Multiple Answers)
 
+Answer can be comma-separated or a JSON array:
+
 ```html
 <div data-swq-question-id="colors">
     <p>Select all primary colors:</p>
-    <div data-swq-type="select-multiple" 
-         data-swq-answer="Red,Blue,Yellow"
+    <div data-swq-type="select-multiple"
+         data-swq-answer='["Red","Blue","Yellow"]'
          data-swq-options='["Red", "Green", "Blue", "Yellow", "Purple"]'></div>
 </div>
 ```
 
 ### 3. True/False
+
+Use `true/false` or the `boolean` alias:
 
 ```html
 <div data-swq-question-id="boolean">
@@ -192,16 +205,16 @@ SWQ automatically generates missing UI elements, but you can provide custom ones
 <div data-swq-quiz>
     <!-- Custom timer display -->
     <div data-swq-timer class="my-timer">5:00</div>
-  
+
     <!-- Questions here -->
-  
+
     <!-- Custom controls -->
-    <button data-swq-previous>← Back</button>
+    <button data-swq-previous>Back</button>
     <button data-swq-check-answer>Submit</button>
     <button data-swq-skip-question>Skip</button>
-    <button data-swq-next>Next →</button>
-  
-    <!-- Custom results container -->
+    <button data-swq-next>Next</button>
+
+    <!-- Custom results container (hidden by default via .swq-hidden) -->
     <div data-swq-results class="my-results"></div>
 </div>
 ```
@@ -212,10 +225,11 @@ SWQ automatically generates missing UI elements, but you can provide custom ones
 
 ```javascript
 // Basic initialization (auto-finds [data-swq-quiz] elements)
-const quizzes = SWQ.init('[data-swq-quiz]');
+// Returns array of newly created quiz instances
+var quizzes = SWQ.init('[data-swq-quiz]');
 
 // With custom options
-const quiz = SWQ.init('#my-quiz', {
+var quiz = SWQ.init('#my-quiz', {
     settings: {
         feedbackMode: 'immediate',
         allowBack: true,
@@ -224,16 +238,19 @@ const quiz = SWQ.init('#my-quiz', {
             console.log('Quiz started!');
         },
         onQuestionChange: function(question, index) {
-            console.log(`Question ${index + 1}: ${question.text}`);
+            console.log('Question ' + (index + 1) + ': ' + question.text);
         },
         onComplete: function(results) {
-            console.log(`Score: ${results.score}/${results.total} (${results.percentage}%)`);
+            console.log('Score: ' + results.score + '/' + results.total + ' (' + results.percentage + '%)');
         }
     }
-});
+})[0];
+```
 
-// Pass questions programmatically
-const quiz = SWQ.init('#container', {
+### Pass Questions Programmatically
+
+```javascript
+var quiz = SWQ.init('#container', {
     questions: [
         {
             id: 'q1',
@@ -243,21 +260,33 @@ const quiz = SWQ.init('#container', {
             options: ['2', '3', '4', '5']
         },
         {
-            id: 'q2', 
+            id: 'q2',
             text: 'Enter your name:',
             type: 'text',
             answer: 'Expected Answer'
         }
     ]
-});
+})[0];
+```
+
+### Instance Methods
+
+```javascript
+// Access a quiz instance
+var quiz = document.querySelector('#my-quiz').swq;
+
+// Reset and retake the quiz
+quiz.reset();
+
+// Clean up: remove listeners, clear timer, free memory
+quiz.destroy();
 ```
 
 ### Event Callbacks
 
-
 | Callback           | Parameters          | Description                  |
-| -------------------- | --------------------- | ------------------------------ |
-| `onStart`          | -                   | Called when quiz begins      |
+| ------------------ | ------------------- | ---------------------------- |
+| `onStart`          | --                  | Called when quiz begins      |
 | `onQuestionChange` | `question`, `index` | Called when question changes |
 | `onComplete`       | `results`           | Called when quiz ends        |
 
@@ -276,9 +305,9 @@ Results object structure:
 
 ### Key CSS Classes
 
-
 | Class                    | Description                        |
-| -------------------------- | ------------------------------------ |
+| ------------------------ | ---------------------------------- |
+| `.swq-quiz-container`    | Optional container for scoped styling |
 | `.swq-question`          | Individual question container      |
 | `.swq-question-text`     | Question text styling              |
 | `.swq-options-container` | Container for answer options       |
@@ -287,13 +316,15 @@ Results object structure:
 | `.swq-feedback`          | Feedback message area              |
 | `.swq-correct`           | Applied to correct answers         |
 | `.swq-incorrect`         | Applied to incorrect answers       |
+| `.swq-active`            | Currently visible question         |
+| `.swq-hidden`            | Hides an element (`display: none`) |
 | `.swq-controls-default`  | Default button container           |
 | `.swq-results-default`   | Default results display            |
+| `.swq-result-summary`    | Results summary card               |
 
 ### Custom Styling Example
 
 ```css
-/* Override default styles */
 .swq-question {
     border: 2px solid #e2e8f0;
     border-radius: 12px;
@@ -313,48 +344,37 @@ Results object structure:
 
 .swq-incorrect {
     border-color: #f56565;
-    background-color: #fff5f5;  
+    background-color: #fff5f5;
 }
 ```
+
+## Answer Validation Logic
+
+| Type            | Validation                                              |
+| --------------- | ------------------------------------------------------- |
+| **choice**      | Exact string match on selected value                    |
+| **true/false**  | Exact string match (`"True"` / `"False"`)                |
+| **boolean**     | Alias for `true/false`                                  |
+| **select-multiple** | Order-independent array comparison; supports comma-separated or JSON array answers |
+| **text**        | Case-insensitive match with whitespace trimming         |
+| **number**      | Numeric comparison via `parseFloat` (e.g., `"10"` = `"10.0"` = `10`) |
 
 ## Examples
 
 Check the `examples/` directory for complete implementations:
 
-- **`examples/minimal.html`** - Basic quiz with automatic UI generation
-- **`examples/custom-ui.html`** - Advanced quiz with custom styling and all question types
+| File | Mode | Features Showcased |
+| ---- | ---- | ------------------ |
+| `minimal.html` | Retry + Timer | Bare-minimum setup, auto-generated UI |
+| `custom-ui.html` | Retry | All question types, Tailwind CSS, custom buttons |
+| `timed-quiz.html` | Standard + Timer | Countdown pressure, skip allowed, Malaysia trivia |
+| `js-api.html` | Immediate | Full JavaScript API, event callbacks, live event log, `boolean` type, JSON array answers |
+| `education-quiz.html` | Standard + Timer | Exam simulation (no back/skip), SPM Sejarah questions |
+| `food-culture.html` | Retry + Back + Skip | `reset()` &amp; `destroy()` demo, `boolean` type, custom styled |
 
 ## Browser Support
 
-Works in all modern browsers supporting:
-
-- ES6 Classes and Arrow Functions
-- Dataset API for data attributes
-- Modern DOM methods (`querySelector`, `addEventListener`)
-- CSS Flexbox
-
-## Advanced Features
-
-### Answer Validation Logic
-
-- **Text answers:** Case-insensitive matching with whitespace trimming
-- **Multiple select:** Order-independent array comparison
-- **Numbers:** Exact numeric matching
-- **Choice/True-False:** String comparison
-
-### State Management
-
-- Tracks user answers with correctness status
-- Maintains current question index
-- Handles timer state and progression
-- Preserves answers when navigating between questions
-
-### Automatic UI Generation
-
-- Creates appropriate input elements based on question type
-- Generates default navigation buttons when not provided
-- Automatically creates timer display and results container
-- Handles responsive layout and accessibility
+Works in all modern browsers. The distributed bundle is transpiled to ES5-compatible JavaScript with no external dependencies.
 
 ## License
 

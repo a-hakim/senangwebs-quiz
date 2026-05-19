@@ -1,12 +1,12 @@
 {
   "name": "senangwebs-quiz",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Lightweight JavaScript library that lets you create interactive quizzes with various question types and feedback modes.",
-  "main": "dist/swj.min.js",
+  "main": "dist/swq.min.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --mode production",
-    "dev": "webpack --mode development --watch"
+    "build": "webpack",
+    "dev": "webpack --watch"
   },
   "devDependencies": {
     "css-loader": "^6.0.0",

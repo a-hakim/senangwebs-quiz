@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malaysia Speed Challenge - Timed Quiz</title>
+    <link rel="stylesheet" href="../dist/swq.min.css">
+
+    <!-- Google Fonts Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                },
+            },
+        }
+    </script>
+
+    <style type="text/tailwindcss">
+        @layer base {
+            body {
+                @apply bg-slate-950 text-slate-100 min-h-screen font-sans antialiased py-12 px-4 selection:bg-sky-500 selection:text-white;
+            }
+            .swq-question {
+                @apply border-b border-slate-800 pb-6 mb-6 last:border-b-0 last:pb-0 last:mb-0 !important;
+            }
+            .swq-question-text {
+                @apply text-lg font-semibold text-slate-200 mb-4 !important;
+            }
+            .swq-options-container {
+                @apply flex flex-col gap-3 !important;
+            }
+            .swq-option {
+                @apply flex items-center cursor-pointer p-4 border border-slate-800 rounded-xl bg-slate-900/30 text-slate-400 hover:bg-slate-800/40 hover:border-sky-500 hover:text-white transition-all duration-200 !important;
+            }
+            .swq-option input {
+                @apply mr-3 h-4 w-4 rounded border-slate-700 bg-slate-800 text-sky-500 focus:ring-sky-500 focus:ring-offset-slate-950 !important;
+            }
+            .swq-input {
+                @apply w-full px-4 py-3 bg-slate-900 border border-slate-800 rounded-xl text-slate-100 placeholder-slate-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all duration-200 !important;
+            }
+            [data-swq-quiz] [data-swq-next],
+            [data-swq-quiz] [data-swq-previous] {
+                @apply px-5 py-2.5 bg-sky-600 hover:bg-sky-500 active:bg-sky-700 text-white font-semibold rounded-xl disabled:bg-slate-800 disabled:text-slate-600 disabled:cursor-not-allowed transition-all duration-200 !important;
+            }
+            [data-swq-quiz] [data-swq-check-answer] {
+                @apply px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-semibold rounded-xl disabled:bg-slate-800 disabled:text-slate-600 disabled:cursor-not-allowed transition-all duration-200 !important;
+            }
+            [data-swq-quiz] [data-swq-skip-question] {
+                @apply px-5 py-2.5 bg-slate-700 hover:bg-slate-600 active:bg-slate-800 text-slate-200 font-semibold rounded-xl disabled:bg-slate-800 disabled:text-slate-600 disabled:cursor-not-allowed transition-all duration-200 !important;
+            }
+            .swq-feedback {
+                @apply mt-4 p-4 rounded-xl border font-medium;
+            }
+            .swq-correct .swq-feedback {
+                @apply bg-emerald-950/20 border-emerald-800/40 text-emerald-400 !important;
+            }
+            .swq-incorrect .swq-feedback {
+                @apply bg-rose-950/20 border-rose-800/40 text-rose-400 !important;
+            }
+            .swq-result-summary {
+                @apply p-6 bg-slate-900/50 border border-slate-800 rounded-2xl text-center space-y-3 !important;
+            }
+            .swq-result-summary h3 {
+                @apply text-2xl font-bold text-sky-400 !important;
+            }
+            .swq-result-summary p {
+                @apply text-slate-300 !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="max-w-3xl mx-auto bg-slate-900/60 backdrop-blur-md border border-slate-800 rounded-2xl shadow-2xl overflow-hidden mb-8">
+        <div class="bg-gradient-to-r from-red-950/40 via-slate-900 to-blue-950/40 border-b border-slate-800 p-6 md:p-8 flex items-center justify-between">
+            <div>
+                <h1 class="text-2xl font-bold text-white flex items-center gap-3">
+                    Malaysia Speed Challenge
+                    <span class="inline-block bg-amber-500/10 border border-amber-500/20 text-amber-400 font-bold text-xs uppercase tracking-wider px-2.5 py-1 rounded-full">Timed</span>
+                </h1>
+            </div>
+            <div class="text-3xl">&#127474;&#127486;</div>
+        </div>
+
+        <div class="p-6 md:p-8">
+            <div
+                id="speed-quiz"
+                data-swq-quiz
+                data-swq-feedback-mode="standard"
+                data-swq-allow-skip="true"
+                data-swq-timer="120">
+
+                <div class="flex justify-end mb-6">
+                    <div class="bg-slate-950/80 border border-slate-800/60 px-4 py-2 rounded-xl flex items-center gap-3">
+                        <span class="text-xs text-slate-500 uppercase tracking-widest font-semibold">Time Remaining</span>
+                        <div data-swq-timer class="text-2xl font-black text-amber-400 tracking-wider"></div>
+                    </div>
+                </div>
+
+                <div data-swq-question-id="q1">
+                    <p>What is the capital of Malaysia?</p>
+                    <div data-swq-type="choice" data-swq-answer="Kuala Lumpur"
+                         data-swq-options='["Kuala Lumpur", "Putrajaya", "Johor Bahru", "George Town"]'></div>
+                </div>
+
+                <div data-swq-question-id="q2">
+                    <p>How many states does Malaysia have?</p>
+                    <div data-swq-type="number" data-swq-answer="13"></div>
+                </div>
+
+                <div data-swq-question-id="q3">
+                    <p>Mount Kinabalu is located in which Malaysian state?</p>
+                    <div data-swq-type="choice" data-swq-answer="Sabah"
+                         data-swq-options='["Sarawak", "Sabah", "Pahang", "Perak"]'></div>
+                </div>
+
+                <div data-swq-question-id="q4">
+                    <p>The Petronas Twin Towers were once the tallest buildings in the world.</p>
+                    <div data-swq-type="true/false" data-swq-answer="True"></div>
+                </div>
+
+                <div data-swq-question-id="q5">
+                    <p>What is the largest state by area in Peninsular Malaysia?</p>
+                    <div data-swq-type="choice" data-swq-answer="Pahang"
+                         data-swq-options='["Perak", "Johor", "Pahang", "Kelantan"]'></div>
+                </div>
+
+                <div data-swq-question-id="q6">
+                    <p>Which strait separates Peninsular Malaysia from Sumatra?</p>
+                    <div data-swq-type="text" data-swq-answer="Strait of Malacca"></div>
+                </div>
+
+                <div data-swq-question-id="q7">
+                    <p>Malaysia shares a land border with which countries?</p>
+                    <div data-swq-type="select-multiple" data-swq-answer="Thailand,Brunei,Indonesia"
+                         data-swq-options='["Thailand", "Singapore", "Brunei", "Indonesia", "Vietnam"]'></div>
+                </div>
+
+                <div data-swq-question-id="q8">
+                    <p>In what year did Malaysia gain independence?</p>
+                    <div data-swq-type="number" data-swq-answer="1957"></div>
+                </div>
+
+                <div data-swq-results></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../dist/swq.min.js"></script>
+</body>
+</html>

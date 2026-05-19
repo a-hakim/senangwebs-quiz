@@ -1,17 +1,16 @@
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-module.exports = {
+const baseConfig = {
   entry: {
-    swq: './src/js/swq.js',
-    styles: './src/css/swq.css'
+    swq: './src/js/swq.js'
   },
   output: {
-    filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
     library: {
       name: 'SWQ',
-      type: 'umd'
+      type: 'umd',
+      export: 'default'
     },
     globalObject: 'this'
   },
@@ -29,10 +28,34 @@ module.exports = {
         use: [MiniCssExtractPlugin.loader, 'css-loader']
       }
     ]
-  },
-  plugins: [
-    new MiniCssExtractPlugin({
-      filename: 'swq.css'
-    })
-  ]
+  }
 };
+
+module.exports = [
+  // Development build (unminified)
+  Object.assign({}, baseConfig, {
+    mode: 'development',
+    devtool: 'source-map',
+    output: Object.assign({}, baseConfig.output, {
+      filename: '[name].js'
+    }),
+    plugins: [
+      new MiniCssExtractPlugin({
+        filename: 'swq.css'
+      })
+    ]
+  }),
+  // Production build (minified)
+  Object.assign({}, baseConfig, {
+    mode: 'production',
+    devtool: false,
+    output: Object.assign({}, baseConfig.output, {
+      filename: '[name].min.js'
+    }),
+    plugins: [
+      new MiniCssExtractPlugin({
+        filename: 'swq.min.css'
+      })
+    ]
+  })
+];

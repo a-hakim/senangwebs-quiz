@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malaysian Food &amp; Culture Quiz</title>
+    <link rel="stylesheet" href="../dist/swq.min.css">
+
+    <!-- Google Fonts Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                },
+            },
+        }
+    </script>
+
+    <style type="text/tailwindcss">
+        @layer base {
+            body {
+                @apply bg-slate-950 text-slate-100 min-h-screen font-sans antialiased py-12 px-4 selection:bg-sky-500 selection:text-white;
+            }
+            .swq-question {
+                @apply border-b border-slate-800 pb-6 mb-6 last:border-b-0 last:pb-0 last:mb-0 !important;
+            }
+            .swq-question-text {
+                @apply text-lg font-semibold text-slate-200 mb-4 !important;
+            }
+            .swq-options-container {
+                @apply flex flex-col gap-3 !important;
+            }
+            .swq-option {
+                @apply flex items-center cursor-pointer p-4 border border-slate-800 rounded-xl bg-slate-900/30 text-slate-400 hover:bg-slate-800/40 hover:border-sky-500 hover:text-white transition-all duration-200 !important;
+            }
+            .swq-option input {
+                @apply mr-3 h-4 w-4 rounded border-slate-700 bg-slate-800 text-sky-500 focus:ring-sky-500 focus:ring-offset-slate-950 !important;
+            }
+            .swq-input {
+                @apply w-full px-4 py-3 bg-slate-900 border border-slate-800 rounded-xl text-slate-100 placeholder-slate-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all duration-200 !important;
+            }
+            [data-swq-quiz] [data-swq-next],
+            [data-swq-quiz] [data-swq-previous] {
+                @apply px-5 py-2.5 bg-sky-600 hover:bg-sky-500 active:bg-sky-700 text-white font-semibold rounded-xl disabled:bg-slate-800 disabled:text-slate-600 disabled:cursor-not-allowed transition-all duration-200 !important;
+            }
+            [data-swq-quiz] [data-swq-check-answer] {
+                @apply px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-semibold rounded-xl disabled:bg-slate-800 disabled:text-slate-600 disabled:cursor-not-allowed transition-all duration-200 !important;
+            }
+            [data-swq-quiz] [data-swq-skip-question] {
+                @apply px-5 py-2.5 bg-slate-700 hover:bg-slate-600 active:bg-slate-800 text-slate-200 font-semibold rounded-xl disabled:bg-slate-800 disabled:text-slate-600 disabled:cursor-not-allowed transition-all duration-200 !important;
+            }
+            .swq-feedback {
+                @apply mt-4 p-4 rounded-xl border font-medium;
+            }
+            .swq-correct .swq-feedback {
+                @apply bg-emerald-950/20 border-emerald-800/40 text-emerald-400 !important;
+            }
+            .swq-incorrect .swq-feedback {
+                @apply bg-rose-950/20 border-rose-800/40 text-rose-400 !important;
+            }
+            .swq-result-summary {
+                @apply p-6 bg-slate-900/50 border border-slate-800 rounded-2xl text-center space-y-3 !important;
+            }
+            .swq-result-summary h3 {
+                @apply text-2xl font-bold text-sky-400 !important;
+            }
+            .swq-result-summary p {
+                @apply text-slate-300 !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="text-center mb-10">
+        <h1 class="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500 mb-3 flex items-center justify-center gap-3">
+            Malaysian Food &amp; Culture
+        </h1>
+        <p class="text-slate-400 max-w-lg mx-auto">Retry mode &mdash; get it right before you move on!</p>
+    </div>
+
+    <div class="quiz-shell max-w-3xl mx-auto bg-slate-900/60 backdrop-blur-md border border-slate-800 rounded-2xl shadow-2xl overflow-hidden mb-8">
+        <div class="bg-gradient-to-r from-orange-950/40 via-slate-900 to-red-950/40 border-b border-slate-800 p-6 md:p-8 flex items-center justify-between">
+            <h2 class="text-xl font-bold text-white flex items-center gap-2">
+                <span>&#127858;</span> Food &amp; Culture Quiz
+            </h2>
+            <span class="inline-block bg-orange-500/10 border border-orange-500/20 text-orange-400 font-bold text-xs uppercase tracking-wider px-2.5 py-1 rounded-full">Retry Mode</span>
+        </div>
+        <div class="p-6 md:p-8">
+            <div
+                id="food-quiz"
+                data-swq-quiz
+                data-swq-feedback-mode="retry"
+                data-swq-allow-back="true"
+                data-swq-allow-skip="true">
+
+                <div data-swq-question-id="f1">
+                    <p>Nasi lemak is considered the national dish of Malaysia. What does "lemak" mean?</p>
+                    <div data-swq-type="choice" data-swq-answer="Creamy or rich"
+                         data-swq-options='["Spicy", "Creamy or rich", "Fragrant", "Sour"]'></div>
+                </div>
+
+                <div data-swq-question-id="f2">
+                    <p>Which Malaysian dish is a noodle soup served in a spicy coconut-based broth?</p>
+                    <div data-swq-type="choice" data-swq-answer="Laksa"
+                         data-swq-options='["Laksa", "Mee Goreng", "Char Kway Teow", "Mee Soto"]'></div>
+                </div>
+
+                <div data-swq-question-id="f3">
+                    <p>Select all the main components of a traditional Nasi Lemak:</p>
+                    <div data-swq-type="select-multiple" data-swq-answer='["Coconut rice","Sambal","Fried anchovies","Peanuts","Cucumber"]'
+                         data-swq-options='["Coconut rice", "Sambal", "Fried anchovies", "Peanuts", "Cucumber", "Roti canai", "Satay"]'></div>
+                </div>
+
+                <div data-swq-question-id="f4">
+                    <p>Roti canai is a popular Malaysian flatbread of Indian-Muslim origin.</p>
+                    <div data-swq-type="boolean" data-swq-answer="True"></div>
+                </div>
+
+                <div data-swq-question-id="f5">
+                    <p>What is the traditional Malay rice dish cooked in bamboo called?</p>
+                    <div data-swq-type="text" data-swq-answer="Lemang"></div>
+                </div>
+
+                <div data-swq-question-id="f6">
+                    <p>How many strands of satay are typically served on a single stick?</p>
+                    <div data-swq-type="number" data-swq-answer="4"></div>
+                </div>
+
+                <div data-swq-question-id="f7">
+                    <p>Which Malaysian state is famous for its Sarawak Laksa?</p>
+                    <div data-swq-type="choice" data-swq-answer="Sarawak"
+                         data-swq-options='["Penang", "Sarawak", "Kelantan", "Melaka"]'></div>
+                </div>
+
+                <div data-swq-question-id="f8">
+                    <p>What type of flower is featured on the Malaysian 5 sen coin?</p>
+                    <div data-swq-type="choice" data-swq-answer="Hibiscus"
+                         data-swq-options='["Orchid", "Hibiscus", "Frangipani", "Bougainvillea"]'></div>
+                </div>
+
+                <div data-swq-results></div>
+
+                <div class="flex justify-between items-center flex-wrap gap-4 mt-8 pt-4 border-t border-slate-800/60">
+                    <div class="flex gap-3">
+                        <button data-swq-skip-question class="px-4 py-2 bg-slate-800 hover:bg-slate-750 text-slate-200 font-semibold rounded-xl transition-all duration-200 disabled:opacity-50">Skip</button>
+                        <button data-swq-check-answer class="px-4 py-2 bg-emerald-600 hover:bg-emerald-550 text-white font-semibold rounded-xl transition-all duration-200 disabled:opacity-50">Check Answer</button>
+                    </div>
+                    <div class="flex gap-3">
+                        <button data-swq-previous class="px-4 py-2 bg-slate-800 hover:bg-slate-750 border border-slate-700 text-slate-400 font-semibold rounded-xl transition-all duration-200 disabled:opacity-50">Back</button>
+                        <button data-swq-next class="px-4 py-2 bg-sky-600 hover:bg-sky-550 text-white font-semibold rounded-xl transition-all duration-200 disabled:opacity-50">Next</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-3xl mx-auto text-center" id="action-bar">
+        <button class="px-5 py-2.5 bg-orange-600 hover:bg-orange-550 active:bg-orange-700 text-white font-semibold rounded-xl shadow-lg transition-all duration-200 cursor-pointer" onclick="retakeQuiz()">Retake Quiz</button>
+        <button class="px-4 py-2 bg-transparent hover:bg-red-950/20 border border-slate-800 hover:border-red-800 text-slate-500 hover:text-red-400 font-semibold rounded-xl transition-all duration-200 ml-3 cursor-pointer" onclick="destroyQuiz()">Destroy Instance</button>
+    </div>
+
+    <script src="../dist/swq.min.js"></script>
+    <script>
+        var quizInstance = document.getElementById('food-quiz').swq;
+
+        function retakeQuiz() {
+            if (quizInstance) {
+                quizInstance.reset();
+            }
+        }
+
+        function destroyQuiz() {
+            if (quizInstance) {
+                quizInstance.destroy();
+                quizInstance = null;
+                document.querySelector('.quiz-shell').innerHTML =
+                    '<div class="py-16 text-center text-slate-500 text-lg font-medium">Quiz instance destroyed.<br><span class="text-sm text-slate-600 mt-2 block">No event listeners, no timers, no memory leaks.</span></div>';
+                document.getElementById('action-bar').style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

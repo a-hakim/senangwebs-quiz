@@ -9,6 +9,11 @@
     margin: 20px auto;
 }
 
+/* Utility */
+.swq-hidden {
+    display: none !important;
+}
+
 /* Default Timer */
 .swq-timer-default {
     font-size: 1.2em;
@@ -73,6 +78,9 @@
     border-radius: 5px;
     font-weight: bold;
 }
+.swq-feedback:empty {
+    display: none;
+}
 .swq-correct .swq-feedback {
     color: #155724;
     background-color: #d4edda;
@@ -90,7 +98,8 @@
     display: flex;
     justify-content: space-between;
 }
-[data-swq-next], [data-swq-previous] {
+[data-swq-quiz] [data-swq-next],
+[data-swq-quiz] [data-swq-previous] {
     padding: 10px 20px;
     font-size: 1em;
     font-weight: bold;
@@ -101,16 +110,19 @@
     color: white;
     transition: background-color 0.2s;
 }
-[data-swq-next]:hover, [data-swq-previous]:hover {
+[data-swq-quiz] [data-swq-next]:hover,
+[data-swq-quiz] [data-swq-previous]:hover {
     background-color: #0056b3;
 }
-[data-swq-next]:disabled, [data-swq-previous]:disabled {
+[data-swq-quiz] [data-swq-next]:disabled,
+[data-swq-quiz] [data-swq-previous]:disabled {
     background-color: #a0a0a0;
     cursor: not-allowed;
 }
 
 /* Custom Control Buttons */
-[data-swq-check-answer], [data-swq-skip-question] {
+[data-swq-quiz] [data-swq-check-answer],
+[data-swq-quiz] [data-swq-skip-question] {
     padding: 10px 20px;
     font-size: 1em;
     font-weight: bold;
@@ -120,36 +132,37 @@
     transition: background-color 0.2s;
 }
 
-[data-swq-check-answer] {
+[data-swq-quiz] [data-swq-check-answer] {
     background-color: #28a745;
     color: white;
 }
 
-[data-swq-check-answer]:hover {
+[data-swq-quiz] [data-swq-check-answer]:hover {
     background-color: #218838;
 }
 
-[data-swq-check-answer]:disabled {
+[data-swq-quiz] [data-swq-check-answer]:disabled {
     background-color: #a0a0a0;
     cursor: not-allowed;
 }
 
-[data-swq-skip-question] {
+[data-swq-quiz] [data-swq-skip-question] {
     background-color: #6c757d;
     color: white;
 }
 
-[data-swq-skip-question]:hover {
+[data-swq-quiz] [data-swq-skip-question]:hover {
     background-color: #5a6268;
 }
 
-[data-swq-skip-question]:disabled {
+[data-swq-quiz] [data-swq-skip-question]:disabled {
     background-color: #a0a0a0;
     cursor: not-allowed;
 }
 
 /* Results Display */
-.swq-results-default, [data-swq-results] {
+[data-swq-quiz] .swq-results-default,
+[data-swq-quiz] [data-swq-results] {
     text-align: center;
 }
 .swq-result-summary {

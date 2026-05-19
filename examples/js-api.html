@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Malaysia Geography Quiz - JavaScript API</title>
+    <link rel="stylesheet" href="../dist/swq.min.css">
+    
+    <!-- Google Fonts Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                },
+            },
+        }
+    </script>
+
+    <style type="text/tailwindcss">
+        @layer base {
+            body {
+                @apply bg-slate-950 text-slate-100 min-h-screen font-sans antialiased py-12 px-4 selection:bg-sky-500 selection:text-white;
+            }
+            .swq-question {
+                @apply border-b border-slate-800 pb-6 mb-6 last:border-b-0 last:pb-0 last:mb-0 !important;
+            }
+            .swq-question-text {
+                @apply text-lg font-semibold text-slate-200 mb-4 !important;
+            }
+            .swq-options-container {
+                @apply flex flex-col gap-3 !important;
+            }
+            .swq-option {
+                @apply flex items-center cursor-pointer p-4 border border-slate-800 rounded-xl bg-slate-900/30 text-slate-400 hover:bg-slate-800/40 hover:border-sky-500 hover:text-white transition-all duration-200 !important;
+            }
+            .swq-option input {
+                @apply mr-3 h-4 w-4 rounded border-slate-700 bg-slate-800 text-sky-500 focus:ring-sky-500 focus:ring-offset-slate-950 !important;
+            }
+            .swq-input {
+                @apply w-full px-4 py-3 bg-slate-900 border border-slate-800 rounded-xl text-slate-100 placeholder-slate-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all duration-200 !important;
+            }
+            [data-swq-quiz] [data-swq-next],
+            [data-swq-quiz] [data-swq-previous] {
+                @apply px-5 py-2.5 bg-sky-600 hover:bg-sky-500 active:bg-sky-700 text-white font-semibold rounded-xl disabled:bg-slate-800 disabled:text-slate-600 disabled:cursor-not-allowed transition-all duration-200 !important;
+            }
+            [data-swq-quiz] [data-swq-check-answer] {
+                @apply px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-semibold rounded-xl disabled:bg-slate-800 disabled:text-slate-600 disabled:cursor-not-allowed transition-all duration-200 !important;
+            }
+            [data-swq-quiz] [data-swq-skip-question] {
+                @apply px-5 py-2.5 bg-slate-700 hover:bg-slate-600 active:bg-slate-800 text-slate-200 font-semibold rounded-xl disabled:bg-slate-800 disabled:text-slate-600 disabled:cursor-not-allowed transition-all duration-200 !important;
+            }
+            .swq-feedback {
+                @apply mt-4 p-4 rounded-xl border font-medium;
+            }
+            .swq-correct .swq-feedback {
+                @apply bg-emerald-950/20 border-emerald-800/40 text-emerald-400 !important;
+            }
+            .swq-incorrect .swq-feedback {
+                @apply bg-rose-950/20 border-rose-800/40 text-rose-400 !important;
+            }
+            .swq-result-summary {
+                @apply p-6 bg-slate-900/50 border border-slate-800 rounded-2xl text-center space-y-3 !important;
+            }
+            .swq-result-summary h3 {
+                @apply text-2xl font-bold text-sky-400 !important;
+            }
+            .swq-result-summary p {
+                @apply text-slate-300 !important;
+            }
+            .event {
+                @apply py-1.5 border-b border-slate-900 last:border-b-0 flex items-start gap-2 flex-wrap;
+            }
+            .event-time {
+                @apply text-slate-600;
+            }
+            .event-name {
+                @apply text-cyan-400 font-semibold;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="text-center mb-10">
+        <h1 class="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-teal-400 mb-3 flex items-center justify-center gap-3">
+            Malaysia Geography
+            <span class="inline-block bg-sky-950/80 border border-sky-900/50 text-sky-400 font-mono text-xs px-2.5 py-1 rounded-md">JS API</span>
+        </h1>
+        <p class="text-slate-400 max-w-lg mx-auto">Quiz built entirely via JavaScript &mdash; no HTML data attributes needed</p>
+    </div>
+
+    <div class="max-w-3xl mx-auto bg-slate-900/60 backdrop-blur-md border border-slate-800 rounded-2xl shadow-2xl p-6 md:p-8 mb-8">
+        <div id="js-api-quiz"></div>
+    </div>
+
+    <div class="max-w-3xl mx-auto bg-slate-900/40 border border-slate-800/80 rounded-2xl p-6">
+        <h4 class="text-sky-400 font-bold text-xs uppercase tracking-wider mb-4 flex items-center gap-2">
+            <span class="inline-block w-2 h-2 rounded-full bg-sky-450 animate-pulse"></span>
+            Event Log
+        </h4>
+        <div id="log-output" class="font-mono text-xs text-slate-400 max-h-48 overflow-y-auto space-y-2 pr-2"></div>
+    </div>
+
+    <script src="../dist/swq.min.js"></script>
+    <script>
+        var logEl = document.getElementById('log-output');
+
+        function logEvent(name, detail) {
+            var now = new Date();
+            var time = now.toLocaleTimeString();
+            var msg = '<div class="event"><span class="event-time">[' + time + ']</span> <span class="event-name">' + name + '</span> ' + (detail || '') + '</div>';
+            logEl.innerHTML += msg;
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+
+        var quiz = SWQ.init('#js-api-quiz', {
+            settings: {
+                feedbackMode: 'immediate',
+                allowBack: true,
+                timer: 0
+            },
+            questions: [
+                {
+                    id: 'geo1',
+                    text: 'What is the longest river in Malaysia?',
+                    type: 'choice',
+                    answer: 'Rajang River',
+                    options: ['Rajang River', 'Kinabatangan River', 'Pahang River', 'Perak River']
+                },
+                {
+                    id: 'geo2',
+                    text: 'Which Malaysian state is known as the "Land Below the Wind"?',
+                    type: 'choice',
+                    answer: 'Sabah',
+                    options: ['Sarawak', 'Sabah', 'Terengganu', 'Kelantan']
+                },
+                {
+                    id: 'geo3',
+                    text: 'Select all UNESCO World Heritage Sites in Malaysia:',
+                    type: 'select-multiple',
+                    answer: '["Kinabalu Park","Gunung Mulu National Park","Historic Cities of the Straits of Malacca","Lenggong Valley"]',
+                    options: [
+                        'Kinabalu Park',
+                        'Gunung Mulu National Park',
+                        'Historic Cities of the Straits of Malacca',
+                        'Taman Negara',
+                        'Lenggong Valley',
+                        'Cameron Highlands'
+                    ]
+                },
+                {
+                    id: 'geo4',
+                    text: 'What is the administrative capital of Malaysia?',
+                    type: 'text',
+                    answer: 'Putrajaya'
+                },
+                {
+                    id: 'geo5',
+                    text: 'How many federal territories does Malaysia have?',
+                    type: 'number',
+                    answer: '3'
+                },
+                {
+                    id: 'geo6',
+                    text: 'Sipadan Island, a world-famous diving spot, is located off the coast of Sabah.',
+                    type: 'boolean',
+                    answer: 'True'
+                },
+                {
+                    id: 'geo7',
+                    text: 'What is the highest peak in Peninsular Malaysia?',
+                    type: 'choice',
+                    answer: 'Gunung Tahan',
+                    options: ['Gunung Tahan', 'Gunung Korbu', 'Gunung Benom', 'Gunung Rabong']
+                },
+                {
+                    id: 'geo8',
+                    text: 'Which sea lies to the east of Peninsular Malaysia?',
+                    type: 'choice',
+                    answer: 'South China Sea',
+                    options: ['Andaman Sea', 'South China Sea', 'Sulu Sea', 'Celebes Sea']
+                }
+            ],
+            onStart: function() {
+                logEvent('onStart', 'Quiz started');
+            },
+            onQuestionChange: function(question, index) {
+                logEvent('onQuestionChange', 'Q' + (index + 1) + ': ' + question.text.substring(0, 40) + '...');
+            },
+            onComplete: function(results) {
+                logEvent('onComplete', 'Score: ' + results.score + '/' + results.total + ' (' + results.percentage + '%) - ' + results.reason);
+            }
+        })[0];
+    </script>
+</body>
+</html>
