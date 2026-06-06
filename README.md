@@ -2,7 +2,7 @@
 
 A lightweight, flexible JavaScript library for creating interactive quizzes with multiple question types, configurable feedback modes, and built-in UI generation.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE.md)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 ![SenangWebs Quiz Preview](https://raw.githubusercontent.com/a-hakim/senangwebs-quiz/master/swq_preview.png)
 
@@ -16,7 +16,7 @@ A lightweight, flexible JavaScript library for creating interactive quizzes with
 - **Built-in Timer:** Optional countdown timer with automatic quiz termination
 - **Navigation Controls:** Configurable back/previous navigation and question skipping
 - **Automatic UI Generation:** Creates complete question interfaces from simple data attributes
-- **Fallback Controls:** Automatically generates navigation buttons, timer display, and results container when not provided
+- **Fallback Controls:** Automatically generates form-safe navigation buttons, timer display, and results container when not provided
 - **Flexible Integration:** Works with existing HTML structures or generates everything automatically
 - **Modern Styling:** Clean, responsive CSS with customizable classes
 - **Smart Answer Validation:** Case-insensitive text matching, numeric comparison, and flexible multiple choice handling
@@ -96,6 +96,7 @@ The library automatically initializes on page load and generates all necessary U
 ```bash
 npm install
 npm run build
+npm test
 ```
 
 Outputs all four files to `dist/`:
@@ -211,15 +212,19 @@ SWQ automatically generates missing UI elements, but you can provide custom ones
     <!-- Questions here -->
 
     <!-- Custom controls -->
-    <button data-swq-previous>Back</button>
-    <button data-swq-check-answer>Submit</button>
-    <button data-swq-skip-question>Skip</button>
-    <button data-swq-next>Next</button>
+    <button type="button" data-swq-previous>Back</button>
+    <button type="button" data-swq-check-answer>Submit</button>
+    <button type="button" data-swq-skip-question>Skip</button>
+    <button type="button" data-swq-next>Next</button>
 
     <!-- Custom results container (hidden by default via .swq-hidden) -->
     <div data-swq-results class="my-results"></div>
 </div>
 ```
+
+Generated controls use `type="button"`, so a quiz can be embedded inside a
+form without navigation clicks submitting the form. Use the same type for
+custom controls.
 
 ## JavaScript API
 

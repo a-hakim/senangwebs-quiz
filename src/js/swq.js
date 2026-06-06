@@ -160,12 +160,14 @@ var swqExport = (function(root) {
             if (this.config.allowBack) {
                 this.ui.prevBtn = document.createElement('button');
                 this.ui.prevBtn.textContent = 'Previous';
+                this.ui.prevBtn.setAttribute('type', 'button');
                 this.ui.prevBtn.setAttribute('data-swq-previous', '');
                 controlsContainer.appendChild(this.ui.prevBtn);
             }
 
             this.ui.nextBtn = document.createElement('button');
             this.ui.nextBtn.textContent = 'Next';
+            this.ui.nextBtn.setAttribute('type', 'button');
             this.ui.nextBtn.setAttribute('data-swq-next', '');
             controlsContainer.appendChild(this.ui.nextBtn);
 

@@ -12,17 +12,17 @@ return /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./src/css/swq.css":
+/***/ "./src/css/swq.css"
 /*!*************************!*\
   !*** ./src/css/swq.css ***!
   \*************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
 // extracted by mini-css-extract-plugin
 
 
-/***/ })
+/***/ }
 
 /******/ 	});
 /************************************************************************/
@@ -44,6 +44,12 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
+/******/ 		if (!(moduleId in __webpack_modules__)) {
+/******/ 			delete __webpack_module_cache__[moduleId];
+/******/ 			var e = new Error("Cannot find module '" + moduleId + "'");
+/******/ 			e.code = 'MODULE_NOT_FOUND';
+/******/ 			throw e;
+/******/ 		}
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
@@ -227,11 +233,13 @@ var swqExport = function (root) {
       if (this.config.allowBack) {
         this.ui.prevBtn = document.createElement('button');
         this.ui.prevBtn.textContent = 'Previous';
+        this.ui.prevBtn.setAttribute('type', 'button');
         this.ui.prevBtn.setAttribute('data-swq-previous', '');
         controlsContainer.appendChild(this.ui.prevBtn);
       }
       this.ui.nextBtn = document.createElement('button');
       this.ui.nextBtn.textContent = 'Next';
+      this.ui.nextBtn.setAttribute('type', 'button');
       this.ui.nextBtn.setAttribute('data-swq-next', '');
       controlsContainer.appendChild(this.ui.nextBtn);
       this.element.appendChild(controlsContainer);
