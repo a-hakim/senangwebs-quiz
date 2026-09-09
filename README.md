@@ -10,19 +10,20 @@ A lightweight, flexible JavaScript library for creating interactive quizzes with
 
 - **Multiple Question Types:** Choice (single select), multiple select, true/false (or `boolean`), text input, and number input
 - **Three Feedback Modes:**
-  - **Standard** - Show all feedback at quiz completion
-  - **Immediate** - Show feedback after each question with automatic progression
+  - **Standard** - Show all feedback at quiz completion, with a per-question answer review
+  - **Immediate** - Show feedback after each question, then continue with an explicit **Continue** step
   - **Retry** - Allow users to retry incorrect answers until they get them right
-- **Built-in Timer:** Optional countdown timer with automatic quiz termination
-- **Navigation Controls:** Configurable back/previous navigation and question skipping
+- **Built-in Timer:** Optional countdown timer with automatic quiz termination; submissions after the deadline are rejected
+- **Navigation Controls:** Configurable back/previous navigation and question skipping; unsent drafts are preserved when navigating back
 - **Automatic UI Generation:** Creates complete question interfaces from simple data attributes
-- **Fallback Controls:** Automatically generates form-safe navigation buttons, timer display, and results container when not provided
+- **Fallback Controls:** Automatically generates each missing control independently (Next, Previous, Skip) so every configuration has a completion path
 - **Flexible Integration:** Works with existing HTML structures or generates everything automatically
 - **Modern Styling:** Clean, responsive CSS with customizable classes
-- **Smart Answer Validation:** Case-insensitive text matching, numeric comparison, and flexible multiple choice handling
-- **Comprehensive Results:** Detailed scoring with percentage calculation and completion reason tracking
-- **Quiz Lifecycle:** `reset()` to retake a quiz and `destroy()` for proper cleanup
-- **CSP Compatible:** No inline event handlers - works under Content Security Policy
+- **Smart Answer Validation:** Case-insensitive text matching with both sides trimmed, strict numeric comparison, native `true`/`false` answers, and array answers for multiple select
+- **Comprehensive Results:** Detailed scoring with percentage calculation, completion reason tracking, and an end-of-quiz answer review
+- **Quiz Lifecycle:** `reset()` to retake a quiz; `destroy()` restores the original markup so the container can be reinitialized
+- **CSP Compatible:** No inline event handlers - works under Content Security Policy (note: question data is rendered as plain text, which also avoids Trusted Types violations)
+- **Accessible by Default:** Labels and group semantics for generated inputs, live regions for feedback and results, and focus moved on question changes
 
 ## Quick Start
 
@@ -61,7 +62,7 @@ The library automatically initializes on page load and generates all necessary U
 <html>
 <head>
     <title>My Quiz</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/senangwebs-quiz@latest/dist/swq.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/senangwebs-quiz@1.0.3/dist/swq.min.css">
 </head>
 <body>
     <div data-swq-quiz data-swq-feedback-mode="immediate" data-swq-timer="120">
@@ -78,17 +79,20 @@ The library automatically initializes on page load and generates all necessary U
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/senangwebs-quiz@latest/dist/swq.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/senangwebs-quiz@1.0.3/dist/swq.min.js"></script>
 </body>
 </html>
 ```
+
+Pin a concrete version in production pages so deployed pages never receive a
+different version without an application release.
 
 **Alternative CDNs:**
 
 ```html
 <!-- unpkg CDN -->
-<link rel="stylesheet" href="https://unpkg.com/senangwebs-quiz@latest/dist/swq.min.css">
-<script src="https://unpkg.com/senangwebs-quiz@latest/dist/swq.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/senangwebs-quiz@1.0.3/dist/swq.min.css">
+<script src="https://unpkg.com/senangwebs-quiz@1.0.3/dist/swq.min.js"></script>
 ```
 
 ### Local Build
@@ -184,14 +188,28 @@ Use `true/false` or the `boolean` alias:
 
 ### Standard Mode (Default)
 
-- No feedback shown during quiz
-- All results displayed at completion
+- No feedback shown during the quiz
+- All results displayed at completion, including a per-question answer review (your answer, correct answer, skipped)
 - Questions marked as correct/incorrect at the end
+
+### Drafts and Submitted Answers
+
+Typed or selected answers are kept as drafts when you navigate back, and are
+separate from submitted answers until the question is submitted. A skipped
+question records no answer.
+
+### Security Boundary
+
+This is a client-side quiz engine: correct answers and scoring state are
+visible in the browser. That is fine for casual learning and self-assessment.
+If results determine certificates, payments, access, or authoritative exam
+outcomes, deliver questions, enforce deadlines, and grade on a server; never
+trust a client-reported score.
 
 ### Immediate Mode
 
 - Feedback shown after each answer submission
-- Automatic progression to next question
+- The primary button becomes **Continue**; the next question appears only after it is clicked
 - Inputs disabled after answering
 
 ### Retry Mode
@@ -202,7 +220,13 @@ Use `true/false` or the `boolean` alias:
 
 ## Custom UI Elements
 
-SWQ automatically generates missing UI elements, but you can provide custom ones:
+SWQ generates each missing control independently, so any subset of custom
+controls keeps a completion path:
+
+- If `Next` is missing, it is always generated.
+- If `Previous` is missing and `data-swq-allow-back` is set, it is generated.
+- If `Skip` is missing and `data-swq-allow-skip` is set, it is generated.
+- A custom Check Answer button checks the current answer without advancing.
 
 ```html
 <div data-swq-quiz>
@@ -232,10 +256,10 @@ custom controls.
 
 ```javascript
 // Basic initialization (auto-finds [data-swq-quiz] elements)
-// Returns array of newly created quiz instances
+// Returns array of newly created instances (elements already initialized are skipped)
 var quizzes = SWQ.init('[data-swq-quiz]');
 
-// With custom options
+// With custom options; callbacks must be nested under settings
 var quiz = SWQ.init('#my-quiz', {
     settings: {
         feedbackMode: 'immediate',
@@ -254,15 +278,15 @@ var quiz = SWQ.init('#my-quiz', {
 })[0];
 ```
 
-### Pass Questions Programmatically
+### Programmatic Questions
 
 ```javascript
 var quiz = SWQ.init('#container', {
     questions: [
         {
-            id: 'q1',
-            text: 'What is 2+2?',
-            type: 'choice',
+            id: 'q1',        // required, must be unique
+            text: 'What is 2+2?', // required, rendered as plain text (no HTML)
+            type: 'choice',  // choice | select-multiple | true/false | boolean | text | number
             answer: '4',
             options: ['2', '3', '4', '5']
         },
@@ -271,10 +295,33 @@ var quiz = SWQ.init('#container', {
             text: 'Enter your name:',
             type: 'text',
             answer: 'Expected Answer'
+        },
+        {
+            id: 'q3',
+            text: 'Select all capitals:',
+            type: 'select-multiple',
+            answer: ['Paris', 'Tokyo'],   // arrays are preserved (commas inside options are safe)
+            options: ['Paris', 'Tokyo', 'London']
+        },
+        {
+            id: 'q4',
+            text: 'The sky is blue.',
+            type: 'boolean',
+            answer: true                  // native booleans are accepted
+        },
+        {
+            id: 'q5',
+            text: 'How many?',
+            type: 'number',
+            answer: 0                     // zero is a valid answer
         }
     ]
 })[0];
 ```
+
+Invalid questions (missing id/text/type/answer, unknown type, duplicate ids)
+are skipped with a console warning; a quiz with no valid questions shows an
+error message instead of failing.
 
 ### Instance Methods
 
@@ -285,7 +332,8 @@ var quiz = document.querySelector('#my-quiz').swq;
 // Reset and retake the quiz
 quiz.reset();
 
-// Clean up: remove listeners, clear timer, free memory
+// Clean up: remove listeners, clear timer, and restore the original markup.
+// The container can then be reinitialized with SWQ.init().
 quiz.destroy();
 ```
 
@@ -360,11 +408,13 @@ Results object structure:
 | Type            | Validation                                              |
 | --------------- | ------------------------------------------------------- |
 | **choice**      | Exact string match on selected value                    |
-| **true/false**  | Exact string match (`"True"` / `"False"`)                |
-| **boolean**     | Alias for `true/false`                                  |
-| **select-multiple** | Order-independent array comparison; supports comma-separated or JSON array answers |
-| **text**        | Case-insensitive match with whitespace trimming         |
-| **number**      | Numeric comparison via `parseFloat` (e.g., `"10"` = `"10.0"` = `10`) |
+| **true/false**  | Case-insensitive match (`"True"`, `"true"`, `true`, `1` are equivalent) |
+| **boolean**     | Alias for `true/false`; native booleans accepted        |
+| **select-multiple** | Order-independent comparison; answers may be a JSON array, a native array, or comma-separated; both sides are trimmed |
+| **text**        | Case-insensitive match; whitespace trimmed on **both** the submitted and expected answers |
+| **number**      | Strict numeric comparison (`"10"` = `"10.0"` = `10`; malformed values such as `"10abc"` never match); `0` is a valid answer |
+
+Unanswered questions can never be marked correct.
 
 ## Examples
 
@@ -381,7 +431,30 @@ Check the `examples/` directory for complete implementations:
 
 ## Browser Support
 
-Works in all modern browsers. The distributed bundle is transpiled to ES5-compatible JavaScript with no external dependencies.
+| Browser | Support |
+| ------- | ------- |
+| Chrome / Edge | Last 2 major versions |
+| Firefox | Last 2 major versions |
+| Safari | Last 2 major versions (macOS and iOS) |
+
+The bundle is not transpiled to ES5; if you need to support legacy browsers,
+add your own transpilation pipeline. Build tooling requires Node.js 18 or
+newer (`engines` field in `package.json`).
+
+For TypeScript consumers, type declarations are shipped at `types/swq.d.ts`:
+
+```typescript
+import SWQ = require('senangwebs-quiz');
+
+const quiz = SWQ.init('#my-quiz', {
+    questions: [{ id: 'q1', text: '2 + 2?', type: 'choice', answer: '4', options: ['3', '4'] }],
+    settings: { feedbackMode: 'immediate' }
+})[0];
+```
+
+The library is browser-only: importing the npm entry in Node/SSR without a DOM
+will not auto-initialize (the DOM reference is guarded), but `SWQ.init` requires
+a real `document`. Treat browser usage as the supported contract.
 
 ## License
 

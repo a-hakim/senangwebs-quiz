@@ -152,12 +152,12 @@
 
                 <div class="flex justify-between items-center flex-wrap gap-4 mt-8 pt-4 border-t border-slate-800/60">
                     <div class="flex gap-3">
-                        <button data-swq-skip-question class="px-4 py-2 bg-slate-800 hover:bg-slate-750 text-slate-200 font-semibold rounded-xl transition-all duration-200 disabled:opacity-50">Skip</button>
-                        <button data-swq-check-answer class="px-4 py-2 bg-emerald-600 hover:bg-emerald-550 text-white font-semibold rounded-xl transition-all duration-200 disabled:opacity-50">Check Answer</button>
+                        <button type="button" data-swq-skip-question class="px-4 py-2 bg-slate-800 hover:bg-slate-750 text-slate-200 font-semibold rounded-xl transition-all duration-200 disabled:opacity-50">Skip</button>
+                        <button type="button" data-swq-check-answer class="px-4 py-2 bg-emerald-600 hover:bg-emerald-550 text-white font-semibold rounded-xl transition-all duration-200 disabled:opacity-50">Check Answer</button>
                     </div>
                     <div class="flex gap-3">
-                        <button data-swq-previous class="px-4 py-2 bg-slate-800 hover:bg-slate-750 border border-slate-700 text-slate-400 font-semibold rounded-xl transition-all duration-200 disabled:opacity-50">Back</button>
-                        <button data-swq-next class="px-4 py-2 bg-sky-600 hover:bg-sky-550 text-white font-semibold rounded-xl transition-all duration-200 disabled:opacity-50">Next</button>
+                        <button type="button" data-swq-previous class="px-4 py-2 bg-slate-800 hover:bg-slate-750 border border-slate-700 text-slate-400 font-semibold rounded-xl transition-all duration-200 disabled:opacity-50">Back</button>
+                        <button type="button" data-swq-next class="px-4 py-2 bg-sky-600 hover:bg-sky-550 text-white font-semibold rounded-xl transition-all duration-200 disabled:opacity-50">Next</button>
                     </div>
                 </div>
             </div>
@@ -165,29 +165,36 @@
     </div>
 
     <div class="max-w-3xl mx-auto text-center" id="action-bar">
-        <button class="px-5 py-2.5 bg-orange-600 hover:bg-orange-550 active:bg-orange-700 text-white font-semibold rounded-xl shadow-lg transition-all duration-200 cursor-pointer" onclick="retakeQuiz()">Retake Quiz</button>
-        <button class="px-4 py-2 bg-transparent hover:bg-red-950/20 border border-slate-800 hover:border-red-800 text-slate-500 hover:text-red-400 font-semibold rounded-xl transition-all duration-200 ml-3 cursor-pointer" onclick="destroyQuiz()">Destroy Instance</button>
+        <button type="button" id="retake-btn" class="px-5 py-2.5 bg-orange-600 hover:bg-orange-550 active:bg-orange-700 text-white font-semibold rounded-xl shadow-lg transition-all duration-200 cursor-pointer">Retake Quiz</button>
+        <button type="button" id="destroy-btn" class="px-4 py-2 bg-transparent hover:bg-red-950/20 border border-slate-800 hover:border-red-800 text-slate-500 hover:text-red-400 font-semibold rounded-xl transition-all duration-200 ml-3 cursor-pointer">Destroy Instance</button>
     </div>
 
     <script src="../dist/swq.min.js"></script>
     <script>
-        var quizInstance = document.getElementById('food-quiz').swq;
+        function getQuizInstance() {
+            var el = document.getElementById('food-quiz');
+            return el ? el.swq : null;
+        }
 
         function retakeQuiz() {
+            var quizInstance = getQuizInstance();
             if (quizInstance) {
                 quizInstance.reset();
             }
         }
 
         function destroyQuiz() {
+            var quizInstance = getQuizInstance();
             if (quizInstance) {
                 quizInstance.destroy();
-                quizInstance = null;
                 document.querySelector('.quiz-shell').innerHTML =
                     '<div class="py-16 text-center text-slate-500 text-lg font-medium">Quiz instance destroyed.<br><span class="text-sm text-slate-600 mt-2 block">No event listeners, no timers, no memory leaks.</span></div>';
                 document.getElementById('action-bar').style.display = 'none';
             }
         }
+
+        document.getElementById('retake-btn').addEventListener('click', retakeQuiz);
+        document.getElementById('destroy-btn').addEventListener('click', destroyQuiz);
     </script>
 </body>
 </html>

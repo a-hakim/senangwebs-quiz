@@ -1,7 +1,7 @@
 ---
 name: senangwebs-quiz
 description: Interactive quizzes with 5 question types, 3 feedback modes, timers, navigation, and auto-generated UI from data attributes.
-version: 1.0.2
+version: 1.0.3
 package: senangwebs-quiz
 ---
 

@@ -1,5 +1,6 @@
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
 const baseConfig = {
   entry: {
@@ -49,6 +50,9 @@ module.exports = [
   Object.assign({}, baseConfig, {
     mode: 'production',
     devtool: false,
+    optimization: {
+      minimizer: ['...', new CssMinimizerPlugin()]
+    },
     output: Object.assign({}, baseConfig.output, {
       filename: '[name].min.js'
     }),

@@ -68,6 +68,7 @@
 /* Text/Number Input Styling */
 .swq-input {
     width: 100%;
+    box-sizing: border-box;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -173,6 +174,83 @@
     background-color: #e9f5ff;
     border: 1px solid #b3d7ff;
     border-radius: 8px;
+}
+
+/* Generated controls inside programmatic containers (no [data-swq-quiz] ancestor) */
+.swq-controls-default [data-swq-next],
+.swq-controls-default [data-swq-previous] {
+    padding: 10px 20px;
+    font-size: 1em;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    transition: background-color 0.2s;
+}
+.swq-controls-default [data-swq-next]:hover,
+.swq-controls-default [data-swq-previous]:hover {
+    background-color: #0056b3;
+}
+.swq-controls-default [data-swq-next]:disabled,
+.swq-controls-default [data-swq-previous]:disabled,
+.swq-controls-default [data-swq-skip-question]:disabled {
+    background-color: #a0a0a0;
+    cursor: not-allowed;
+}
+.swq-controls-default [data-swq-skip-question] {
+    padding: 10px 20px;
+    font-size: 1em;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    background-color: #6c757d;
+    color: white;
+}
+.swq-controls-default [data-swq-skip-question]:hover {
+    background-color: #5a6268;
+}
+
+/* Answer review (end-of-quiz) */
+.swq-review {
+    margin-top: 15px;
+    text-align: left;
+}
+.swq-review-item {
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+}
+.swq-review-item p {
+    margin: 0 0 4px 0;
+}
+.swq-review-item p:last-child {
+    margin-bottom: 0;
+}
+.swq-review-question {
+    font-weight: 600;
+}
+.swq-review-correct {
+    border-color: #c3e6cb;
+    background-color: #f6fef8;
+}
+.swq-review-incorrect {
+    border-color: #f5c6cb;
+    background-color: #fffafa;
+}
+
+/* Error state */
+.swq-error {
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 5px;
+    padding: 10px;
 }
 
 /*# sourceMappingURL=swq.css.map*/

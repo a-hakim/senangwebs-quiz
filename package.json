@@ -1,15 +1,35 @@
 {
   "name": "senangwebs-quiz",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Lightweight JavaScript library that lets you create interactive quizzes with various question types and feedback modes.",
   "main": "dist/swq.min.js",
+  "types": "types/swq.d.ts",
+  "exports": {
+    ".": {
+      "types": "./types/swq.d.ts",
+      "default": "./dist/swq.min.js"
+    },
+    "./dist/*": "./dist/*"
+  },
+  "files": [
+    "dist",
+    "types",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "test": "npm run build && node --test",
     "build": "webpack",
-    "dev": "webpack --watch"
+    "dev": "webpack --watch",
+    "prepack": "npm run build"
+  },
+  "engines": {
+    "node": ">=18"
   },
   "devDependencies": {
     "css-loader": "^6.0.0",
+    "css-minimizer-webpack-plugin": "^8.0.0",
+    "jsdom": "^29.1.1",
     "mini-css-extract-plugin": "^2.0.0",
     "style-loader": "^3.0.0",
     "webpack": "^5.0.0",
@@ -20,7 +40,7 @@
   },
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/a-hakim/senangwebs-quiz.git"
   },
   "keywords": [
     "quiz",

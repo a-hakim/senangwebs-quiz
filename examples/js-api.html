@@ -126,7 +126,16 @@
             settings: {
                 feedbackMode: 'immediate',
                 allowBack: true,
-                timer: 0
+                timer: 0,
+                onStart: function() {
+                    logEvent('onStart', 'Quiz started');
+                },
+                onQuestionChange: function(question, index) {
+                    logEvent('onQuestionChange', 'Q' + (index + 1) + ': ' + question.text.substring(0, 40) + '...');
+                },
+                onComplete: function(results) {
+                    logEvent('onComplete', 'Score: ' + results.score + '/' + results.total + ' (' + results.percentage + '%) - ' + results.reason);
+                }
             },
             questions: [
                 {
@@ -189,16 +198,7 @@
                     answer: 'South China Sea',
                     options: ['Andaman Sea', 'South China Sea', 'Sulu Sea', 'Celebes Sea']
                 }
-            ],
-            onStart: function() {
-                logEvent('onStart', 'Quiz started');
-            },
-            onQuestionChange: function(question, index) {
-                logEvent('onQuestionChange', 'Q' + (index + 1) + ': ' + question.text.substring(0, 40) + '...');
-            },
-            onComplete: function(results) {
-                logEvent('onComplete', 'Score: ' + results.score + '/' + results.total + ' (' + results.percentage + '%) - ' + results.reason);
-            }
+            ]
         })[0];
     </script>
 </body>
